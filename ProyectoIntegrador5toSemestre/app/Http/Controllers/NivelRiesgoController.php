@@ -2,64 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\nivel_riesgo;
+use App\Models\NivelRiesgo;
 use Illuminate\Http\Request;
+use App\Http\Requests\NivelRiesgoRequest;
+use Illuminate\Database\QueryException;
 
 class NivelRiesgoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista todos los niveles de riesgo
      */
     public function index()
     {
-        //
+        $nivelRiesgo = NivelRiesgo::orderBy('id_nivel_riesgo', 'desc')->paginate(6);
+        return view('nivel.index', compact('nivelRiesgo'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario de creación
      */
     public function create()
     {
-        //
+        return view('nivel.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda un nuevo nivel de riesgo
      */
-    public function store(Request $request)
+    public function store(NivelRiesgoRequest $request)
     {
-        //
+        NivelRiesgo::create($request->validated());
+        return redirect()->route('nivel.index')
+            ->with('success', 'Nivel de riesgo creado exitosamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el detalle de un nivel de riesgo
      */
-    public function show(nivel_riesgo $nivel_riesgo)
+    public function show(NivelRiesgo $NivelRiesgo)
     {
-        //
+        return view('nivel.show', compact('NivelRiesgo'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Muestra el formulario de edición
      */
-    public function edit(nivel_riesgo $nivel_riesgo)
+    public function edit(NivelRiesgo $NivelRiesgo)
     {
-        //
+        return view('nivel.edit', ['NivelRiesgo' => $NivelRiesgo]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza un nivel de riesgo existente
      */
-    public function update(Request $request, nivel_riesgo $nivel_riesgo)
+    public function update(NivelRiesgoRequest $request, NivelRiesgo $NivelRiesgo)
     {
-        //
+        $NivelRiesgo->update($request->validated());
+        return redirect()->route('nivel.index')
+            ->with('success', 'Nivel de riesgo actualizado exitosamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina un nivel de riesgo
      */
-    public function destroy(nivel_riesgo $nivel_riesgo)
+    public function destroy(NivelRiesgo $NivelRiesgo)
     {
-        //
+        try {
+            $NivelRiesgo->delete();
+            return redirect()->route('nivel.index')
+                ->with('success', 'Nivel de riesgo eliminado exitosamente.');
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return redirect()->route('nivel.index')
+                    ->with('error', 'No se puede eliminar. Este nivel está asociado a otros registros.');
+            }
+            return redirect()->route('nivel.index')
+                ->with('error', 'Ocurrió un error inesperado al eliminar.');
+        }
     }
 }
