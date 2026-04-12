@@ -1,0 +1,111 @@
+/* Tarjeta con clase 'card formulario' */
+:root{
+    --form-bg:#0f172a;
+    --form-border:rgba(56, 114, 191, 0.24);
+    --form-text:#e2e8f0;
+    --form-muted:#94a3b8;
+    --form-accent:#38bdf8;
+    --form-accent-strong:#0ea5e9;
+}
+.card.formulario {
+    background-color: var(--form-bg);
+    border: 1px solid var(--form-border);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    color: var(--form-text);
+}
+.card.formulario h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--form-text);
+}
+.form-group {
+    margin-bottom: 18px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--form-text);
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background-color: #0b1220;
+    color: var(--form-text);
+    box-sizing: border-box;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--form-accent);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+.form-group button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--form-accent);
+    color: #0b1120;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: background 0.25s ease;
+}
+.form-group button:hover {
+    background-color: var(--form-accent-strong);
+}
+@media (max-width: 680px) {
+    .card.formulario {
+        padding: 18px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 10px;
+    }
+    .form-group button {
+        padding: 12px;
+        font-size: 15px;
+    }
+}
+.alert-danger {
+    background-color: #581c1c;
+    color: #f8d7da;
+    border: 1px solid #7f1d1d;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+.alert-danger ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.text-danger {
+    color: #fca5a5;
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+}
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+    border-color: #dc2626;
+    background-color: rgba(220, 38, 38, 0.16);
+}
+
