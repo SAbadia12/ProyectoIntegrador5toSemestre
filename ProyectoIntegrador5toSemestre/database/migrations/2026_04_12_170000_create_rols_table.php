@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('puntos_cardinales', function (Blueprint $table) {
-            $table->id('id_punto_cardinal');
-            $table->string('nombre');
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id('id_rol');
+            $table->string('rol');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('puntos_cardinales');
+        Schema::dropIfExists('roles');
     }
 };
