@@ -1,6 +1,6 @@
 @extends('layouts.plantilla')
 
-@section('titulomain', 'Puntos Cardinales /Editar')
+@section('titulomain', 'Puntos Cardinales/Editar')
 
 @section('contenido')
 

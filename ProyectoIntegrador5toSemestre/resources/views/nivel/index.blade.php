@@ -13,15 +13,33 @@ Niveles de Riesgo
         </div>
     @endif
 <section class="container-tabla">
-    <h2 class="titulo-tabla"> Niveles de Riesgo</h2>
 
     <nav class="nav-botones">
+         {{-- formulario para filtros y busqueda --}}
+        <form action="{{ route('nivel.index') }}" method="GET" class="form-filtros">
+            {{-- Filtro por color --}}
+            <select name="nivel" class="filtro-select">
+                <option value="">Todos los colores</option>
+                @foreach ($nivelRiesgo as $nivel)
+                <option value="{{ $nivel->color }}" {{ request('nivel') == $nivel->color ? 'selected' : '' }}>
+                    {{ $nivel->color }}
+                </option>
+                @endforeach
+            </select>
+
+            {{-- filtro por nivel --}}
+            <input type="text" name="buscar" placeholder="Buscar nivel" value="{{ request('buscar') }}" class="filtro-input">
+            <button type="submit" class="nav-link btn-filtrar">Filtrar</button>
+            <a href="{{ route('nivel.index') }}" class="nav-link btn-filtrar">Limpiar Filtros</a>
+        </form>
         <ul class="nav-menu">      
       
             <li class="nav-item">
                 <a href="{{route('nivel.create')}}" class="nav-link btn-agregar">Agregar nivel de riesgo</a>
             </li>      
-         
+            <li class="nav-item">
+                <a href="{{ url('export/nivel_riesgo') }}" class="nav-link btn-agregar" target="_blank">Generar PDF</a>
+            </li>
         </ul>
     </nav>
     

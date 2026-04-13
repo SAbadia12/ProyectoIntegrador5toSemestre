@@ -12,9 +12,21 @@ class NivelRiesgoController extends Controller
     /**
      * Lista todos los niveles de riesgo
      */
-    public function index()
+    public function index(Request $request)
     {
-        $nivelRiesgo = NivelRiesgo::orderBy('id_nivel_riesgo', 'desc')->paginate(6);
+        //$nivelRiesgo = NivelRiesgo::orderBy('id_nivel_riesgo', 'desc')->paginate(6);
+        //return view('nivel.index', compact('nivelRiesgo'));
+        $nivelRiesgo = NivelRiesgo::all();
+
+        $query = NivelRiesgo::query();
+        // aplicar filtros si existen
+        if ($request->filled('nivel')) {
+            $query->where('color', $request->input('nivel'));
+        }
+        if ($request->filled('buscar')) {
+            $query->where('nivel', 'like', '%' . $request->buscar . '%');
+        }
+        $nivelRiesgo = $query->orderBy('id_nivel_riesgo', 'desc')->paginate(6);
         return view('nivel.index', compact('nivelRiesgo'));
     }
 

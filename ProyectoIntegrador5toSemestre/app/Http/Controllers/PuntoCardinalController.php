@@ -11,10 +11,22 @@ class PuntoCardinalController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $puntoCardinal = PuntoCardinal::orderBy('id_punto_cardinal', 'desc')->paginate(6);
+        //$puntoCardinal = PuntoCardinal::orderBy('id_punto_cardinal', 'desc')->paginate(6);
+        //return view('cardinal.index', compact('puntoCardinal'));
+
+        //$nivelRiesgo = NivelRiesgo::orderBy('id_nivel_riesgo', 'desc')->paginate(6);
+        //return view('nivel.index', compact('nivelRiesgo'));
+        $puntoCardinal = PuntoCardinal::all();
+
+        $query = PuntoCardinal::query();
+        // aplicar filtros si existen
+        if ($request->filled('buscar')) {
+            $query->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
+        $puntoCardinal = $query->orderBy('id_punto_cardinal', 'desc')->paginate(6);
         return view('cardinal.index', compact('puntoCardinal'));
     }
 
