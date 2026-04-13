@@ -90,7 +90,7 @@
 
         .brand-table .brand-logo-cell {
             width: auto;
-            padding-right: 8px;
+            padding-right: 18px;
         }
 
         .brand-table .brand-text-cell {
@@ -184,7 +184,7 @@
                         <img src="{{ public_path('img/logoSISC.jpeg') }}" alt="Logo SISC" class="brand-logo">
                     </td>
                     <td class="brand-text-cell">
-                        <p style="margin:0; font-size:22px; color:#38bdf8;">SISC (Sistema Informativo de Seguridad Ciudadana)</p>
+                        <p style="margin:0; font-size:22px; color:#38bdf8;">SISC - Sistema de Información de Seguridad Ciudadana</p>
                         <p style="margin:0; font-size:12px; color:#94a3b8;">Exportación de datos</p>
                     </td>
                 </tr>
