@@ -124,8 +124,8 @@ a:hover{
     border-left: 4px solid transparent;
 }
 .element-slidebar-btn img{
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     filter: brightness(0) invert(1);
 }
 .element-slidebar-btn span{

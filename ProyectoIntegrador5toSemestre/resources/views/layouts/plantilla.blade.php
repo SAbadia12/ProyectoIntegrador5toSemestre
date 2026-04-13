@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador - Tienda</title>
+    <link rel="icon" href="img/logoSISC.jpeg" type="image/jpeg">
+    <title>SISC - Admin Web</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     @vite(['resources/css/app.css'])
@@ -37,16 +38,16 @@
         </div>
         <nav class="slidebar-nav">
             <a href="{{ route('plantilla') }}" class="element-slidebar-btn {{ request()->routeIs('plantilla') ? 'active' : '' }}">
-                <img src="{{asset('img/compras.png')}}" alt="Dashboard">
+                <img src="{{asset('img/Dashboard.png')}}" alt="Dashboard">
                 <span>Dashboard</span>
             </a>
 
             <a href="{{ route('nivel.index') }}" class="element-slidebar-btn {{ request()->routeIs('nivel.*') ? 'active' : '' }}">
-                <img src="{{asset('img/category.png')}}" alt="NivelRiesgo">
+                <img src="{{asset('img/Alarma.png')}}" alt="NivelRiesgo">
                 <span>Niveles de riesgo</span>
             </a>
             <a href="{{ route('cardinal.index') }}" class="element-slidebar-btn {{ request()->routeIs('cardinal.*') ? 'active' : '' }}">
-                <img src="{{asset('img/rokrt.png')}}" alt="PuntoCardinal">
+                <img src="{{asset('img/puntosCardinales.png')}}" alt="PuntoCardinal">
                 <span>Puntos Cardinales</span>
             </a>
         </nav>
