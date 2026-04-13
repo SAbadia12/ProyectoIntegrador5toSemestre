@@ -1,7 +1,7 @@
 @extends("layouts.plantilla")
 
 @section("titulomain")
-Niveles de Riesgo
+Punto Cardinal
 @endsection
 
 @section("contenido")
@@ -13,13 +13,13 @@ Niveles de Riesgo
         </div>
     @endif
 <section class="container-tabla">
-    <h2 class="titulo-tabla"> Niveles de Riesgo</h2>
+    <h2 class="titulo-tabla"> Puntos Cardinales</h2>
 
     <nav class="nav-botones">
         <ul class="nav-menu">      
       
             <li class="nav-item">
-                <a href="{{route('nivel.create')}}" class="nav-link btn-agregar">Agregar nivel de riesgo</a>
+                <a href="{{route('cardinal.create')}}" class="nav-link btn-agregar">Agregar Punto Cardinal</a>
             </li>      
          
         </ul>
@@ -29,33 +29,31 @@ Niveles de Riesgo
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nivel</th>
-                <th>Color</th>            
+                <th>Nombre</th>   
                 <th>Opciones</th>
             </tr>
         </thead>
-       <tbody class="tabla-NivelRiesgo">
+       <tbody class="tabla-PuntoCardinal">
 
-    @foreach ($nivelRiesgo as $nivel)
+    @foreach ($puntoCardinal as $cardinal)
        <tr>
-         <td>{{$nivel->id_nivel_riesgo}}</td>
-         <td>{{$nivel->nivel}}</td>
-         <td>{{$nivel->color}}</td>      
+         <td>{{$cardinal->id_punto_cardinal}}</td>
+         <td>{{$cardinal->nombre}}</td>   
             <td >
-                <a href="{{route('nivel.show', $nivel)}}">
+                <a href="{{route('cardinal.show', $cardinal)}}">
                    <img src="img/view.png" alt=""> 
                 </a>
 
              
                       
                  
-                   <a href="{{route('nivel.edit', $nivel)}}">
+                   <a href="{{route('cardinal.edit', $cardinal)}}">
                    <img src="img/lapiz.png" alt="">
                    </a>
                              
                                         
                
-                    <form action="{{route('nivel.destroy', $nivel)}}" method="POST" onsubmit="return confimarEliminacion()">
+                    <form action="{{route('cardinal.destroy', $cardinal)}}" method="POST" onsubmit="return confimarEliminacion()">
 
                     {{-- permite gemrar el token para enviar por post --}}
                     @csrf
