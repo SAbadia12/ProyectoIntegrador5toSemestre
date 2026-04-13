@@ -45,7 +45,7 @@
          </a>
          <a href="#" class="element-slidebar-btn">
             <img src="{{asset('img/rokrt.png')}}" alt="PuntoCardinal">
-            <span>Puntos Cardinales</span>
+            <span><a href="{{route('cardinal.index')}}">Puntos Cardinales</span>
          </a>
       </nav>
       <div class="slidebar-footer">

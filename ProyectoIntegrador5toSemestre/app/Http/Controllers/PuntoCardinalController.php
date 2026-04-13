@@ -51,20 +51,20 @@ class PuntoCardinalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PuntoCardinal $puntoCardinal)
+    public function edit(PuntoCardinal $cardinal)
     {
         //
-        return view('cardinal.edit', ["cardinal" => $puntoCardinal]);
+        return view('cardinal.edit', ["cardinal" => $cardinal]);
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PuntoCardinalRequest $request, PuntoCardinal $puntoCardinal)
+    public function update(PuntoCardinalRequest $request, PuntoCardinal $cardinal)
     {
         //
-        $puntoCardinal->update($request->validated());
+        $cardinal->update($request->validated());
         return redirect()->route('cardinal.index')
             ->with('success', 'Punto Cardinal actualizado exitosamente.');
     }
@@ -72,11 +72,11 @@ class PuntoCardinalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PuntoCardinal $puntoCardinal)
+    public function destroy(PuntoCardinal $cardinal)
     {
         //
         try {
-            $puntoCardinal->delete();
+            $cardinal->delete();
             return redirect()->route('cardinal.index')
                 ->with('success', 'Punto Cardinal eliminado exitosamente.');
         } catch (QueryException $e) {

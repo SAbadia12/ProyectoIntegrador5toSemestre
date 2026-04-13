@@ -10,6 +10,10 @@ class PuntoCardinal extends Model
     //
     use HasFactory;
 
+    protected $table = 'puntos_cardinales';
+
+    protected $primaryKey = 'id_punto_cardinal';
+
     protected $fillable = [
         'nombre',
     ];

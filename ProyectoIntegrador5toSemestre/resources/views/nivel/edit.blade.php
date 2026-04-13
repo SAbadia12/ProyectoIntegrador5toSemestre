@@ -33,7 +33,7 @@
             </div>
             <!-- Botón Guardar -->
             <div class="form-group">
-                <button type="submit">Actulizar nivel</button>
+                <button type="submit">Actualizar nivel</button>
             </div>
         </form>
         

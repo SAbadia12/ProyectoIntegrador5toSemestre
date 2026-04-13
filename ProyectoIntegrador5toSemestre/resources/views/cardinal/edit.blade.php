@@ -1,6 +1,6 @@
 @extends('layouts.plantilla')
 
-@section('titulomain', 'Niveles de riesgo /Editar')
+@section('titulomain', 'Puntos Cardinales /Editar')
 
 @section('contenido')
 
@@ -16,24 +16,20 @@
 
   <div class= "container-formulario">
     <div class="card formulario">
-        <h2>Editar Nivel de riesgo</h2>
-        <form action="{{route('nivel.update', $nivel->id_nivel_riesgo)}}" enctype="multipart/form-data" method="POST">
+        <h2>Editar Punto Cardinal</h2>
+        <form action="{{route('cardinal.update', $cardinal->id_punto_cardinal)}}" enctype="multipart/form-data" method="POST">
             {{-- agregar directica para qu se genere un token --}}
             @csrf 
             @method('PATCH')
             <!-- Campo Nombre -->
             <div class="form-group">
-                <label for="nivel">Nivel</label>
-                <input type="text" id="nivel" name="nivel" required value={{$nivel->nivel}} class="form-control">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required value={{$cardinal->nombre}} class="form-control">
             </div>
-            <!-- Campo Descripción -->
-            <div class="form-group">
-                <label for="color">Color</label>
-                <input type="text" id="color" name="color" required value={{$nivel->color}} class="form-control">
-            </div>
+            
             <!-- Botón Guardar -->
             <div class="form-group">
-                <button type="submit">Actulizar nivel</button>
+                <button type="submit">Actualizar Punto Cardinal</button>
             </div>
         </form>
         
