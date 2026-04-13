@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NivelRiesgoController;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -44,3 +45,5 @@ Route::post('/logout', function () {
 })->name('logout');
 
 Route::view('/visitante', 'visitante')->name('visitante');
+
+Route::resource('/nivel', NivelRiesgoController::class);

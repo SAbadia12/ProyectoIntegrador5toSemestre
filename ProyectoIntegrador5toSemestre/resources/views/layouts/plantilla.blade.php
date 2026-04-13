@@ -40,12 +40,12 @@
             <span>Dashboard</span>
          </a>
          <a href="#" class="element-slidebar-btn">
-            <img src="{{asset('img/category.png')}}" alt="Categorias">
-            <span>Categorías</span>
+            <img src="{{asset('img/category.png')}}" alt="NivelRiesgo">
+            <span><a href="{{route('nivel.index')}}"> Niveles de riesgo</span>
          </a>
          <a href="#" class="element-slidebar-btn">
-            <img src="{{asset('img/rokrt.png')}}" alt="Productos">
-            <span>Productos</span>
+            <img src="{{asset('img/rokrt.png')}}" alt="PuntoCardinal">
+            <span>Puntos Cardinales</span>
          </a>
       </nav>
       <div class="slidebar-footer">
