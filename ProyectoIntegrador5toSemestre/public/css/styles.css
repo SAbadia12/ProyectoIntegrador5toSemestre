@@ -538,72 +538,124 @@ a:hover{
         background-color: #0056b3;
     }
 
-    /* Botón de Generar PDF en verde */
+    /* Botón de Generar PDF */
     .btn-generar-pdf {
-        background-color: #28a745;
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     }
 
     .btn-generar-pdf:hover {
-        background-color: #218838;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
     }
 
-    /* Botón de Agregar Producto en azul claro */
-    .btn-agregar{
-        background-color: #17a2b8;
+    /* Botón de Agregar */
+    .btn-agregar {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .btn-agregar:hover {
-        background-color: #138496;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(14, 165, 233, 0.3);
     }
 
     /* Estilo del contenedor del formulario */
-.form-filtros {
-   
-    margin: 0;
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap:nowrap;
-    gap: 10px;
-    align-items: flex-start;
-    justify-content: flex-start;
-    min-width: 600px;
-}
+    .form-filtros {
+        margin: 0;
+        margin-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 16px;
+        background: rgba(11, 23, 42, 0.95);
+        border: 1px solid rgba(56, 114, 191, 0.24);
+        border-radius: 12px;
+    }
 
-/* Select y input con estilo consistente */
-.filtro-select,
-.filtro-input {
-    padding: 7px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    min-width: 150px;
-    font-size: 14px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease;
-    flex-shrink: 0;
-}
+    /* Select y input con estilo consistente */
+    .filtro-select,
+    .filtro-input {
+        padding: 10px 14px;
+        border: 1px solid rgba(56, 114, 191, 0.36);
+        border-radius: 8px;
+        min-width: 150px;
+        font-size: 14px;
+        background-color: rgba(15, 23, 42, 0.8);
+        color: #e2e8f0;
+        transition: all 0.3s ease;
+        font-family: "Roboto", sans-serif;
+    }
 
-.filtro-input {
-    min-width: 200px;
-}
+    .filtro-input {
+        min-width: 200px;
+    }
 
-.filtro-select:focus,
-.filtro-input:focus {
-    border-color: #17a2b8;
-    outline: none;
-}
+    .filtro-select:focus,
+    .filtro-input:focus {
+        border-color: #38bdf8;
+        background-color: rgba(15, 23, 42, 0.95);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(56, 114, 191, 0.2);
+    }
 
-/* Botón filtrar con estilo igual a los otros botones */
-.btn-filtrar {
-    padding: 7px 20px;
-    border-radius: 5px;
-    background-color: #ffc107; /* Amarillo */
-    color: #fff;
-}
+    /* Botón filtrar con estilo profesional */
+    .btn-filtrar {
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(56, 114, 191, 0.3), rgba(14, 165, 233, 0.2));
+        color: #38bdf8;
+        border: 1px solid rgba(56, 114, 191, 0.48);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
 
-.btn-filtrar:hover {
-    background-color: #e0a800;
-}
- /* Estilos para la paginación */
+    .btn-filtrar:hover {
+        background: linear-gradient(135deg, rgba(56, 114, 191, 0.4), rgba(14, 165, 233, 0.3));
+        border-color: #38bdf8;
+    }
+
+    /* Estilos para nav-botones */
+    .nav-botones {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        flex-wrap: wrap;
+    }
+
+    .nav-item {
+        display: flex;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+
 .pagination {
     display: flex;
     justify-content: flex-end; /* Alinear a la derecha */

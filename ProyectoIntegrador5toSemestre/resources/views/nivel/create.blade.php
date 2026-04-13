@@ -1,6 +1,6 @@
 @extends('layouts.plantilla')
 
-@section('titulomain', 'Niveles de riesgo /agregar')
+@section('titulomain', 'Niveles de Riesgo/agregar')
 
 @section('contenido')
 

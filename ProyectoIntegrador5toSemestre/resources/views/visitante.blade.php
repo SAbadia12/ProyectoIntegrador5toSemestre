@@ -17,7 +17,7 @@
                 <div class="login-header">
                     <span class="eyebrow">Zona visitante</span>
                     <h1>Acceso sin registro</h1>
-                    <p>Explora la aplicación como visitante. Si quieres volver, usa los botones para regresar o iniciar sesión.</p>
+                    <p>Explora la aplicaciÃ³n como visitante. Si quieres volver, usa los botones para regresar o iniciar sesiÃ³n.</p>
                 </div>
                 <div class="auth-buttons">
                     <a href="{{ route('home') }}" class="auth-button secondary">Volver al inicio</a>
