@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NivelRiesgoController;
+use App\Http\Controllers\PuntoCardinalController;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -47,3 +48,4 @@ Route::post('/logout', function () {
 Route::view('/visitante', 'visitante')->name('visitante');
 
 Route::resource('/nivel', NivelRiesgoController::class);
+Route::resource('/cardinal', PuntoCardinalController::class);

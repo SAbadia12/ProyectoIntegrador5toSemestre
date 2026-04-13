@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\punto_cardinal;
+use App\Http\Requests\PuntoCardinalRequest;
+use App\Models\PuntoCardinal;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class PuntoCardinalController extends Controller
 {
@@ -13,6 +14,8 @@ class PuntoCardinalController extends Controller
     public function index()
     {
         //
+        $puntoCardinal = PuntoCardinal::orderBy('id_punto_cardinal', 'desc')->paginate(6);
+        return view('cardinal.index', compact('puntoCardinal'));
     }
 
     /**
@@ -21,45 +24,68 @@ class PuntoCardinalController extends Controller
     public function create()
     {
         //
+        return view('cardinal.create');
+        
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PuntoCardinalRequest $request)
     {
         //
+        PuntoCardinal::create($request->validated());
+        return redirect()->route('cardinal.index')
+            ->with('success', 'Punto cardinal creado exitosamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(punto_cardinal $punto_cardinal)
+    public function show(PuntoCardinal $puntoCardinal)
     {
         //
+        return view('cardinal.show', compact('puntoCardinal'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(punto_cardinal $punto_cardinal)
+    public function edit(PuntoCardinal $puntoCardinal)
     {
         //
+        return view('cardinal.edit', ["cardinal" => $puntoCardinal]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, punto_cardinal $punto_cardinal)
+    public function update(PuntoCardinalRequest $request, PuntoCardinal $puntoCardinal)
     {
         //
+        $puntoCardinal->update($request->validated());
+        return redirect()->route('cardinal.index')
+            ->with('success', 'Punto Cardinal actualizado exitosamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(punto_cardinal $punto_cardinal)
+    public function destroy(PuntoCardinal $puntoCardinal)
     {
         //
+        try {
+            $puntoCardinal->delete();
+            return redirect()->route('cardinal.index')
+                ->with('success', 'Punto Cardinal eliminado exitosamente.');
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                return redirect()->route('cardinal.index')
+                    ->with('error', 'No se puede eliminar. Este Punto Cardinal está asociado a otros registros.');
+            }
+            return redirect()->route('cardinal.index')
+                ->with('error', 'Ocurrió un error inesperado al eliminar.');
+        }
     }
 }
