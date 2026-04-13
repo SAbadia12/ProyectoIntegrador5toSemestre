@@ -47,17 +47,17 @@ class NivelRiesgoController extends Controller
     /**
      * Muestra el formulario de edición
      */
-    public function edit(NivelRiesgo $NivelRiesgo)
+    public function edit(NivelRiesgo $nivel)
     {
-        return view('nivel.edit', ['NivelRiesgo' => $NivelRiesgo]);
+        return view('nivel.edit', ["nivel" => $nivel]);
     }
 
     /**
      * Actualiza un nivel de riesgo existente
      */
-    public function update(NivelRiesgoRequest $request, NivelRiesgo $NivelRiesgo)
+    public function update(NivelRiesgoRequest $request, NivelRiesgo $nivel)
     {
-        $NivelRiesgo->update($request->validated());
+        $nivel->update($request->validated());
         return redirect()->route('nivel.index')
             ->with('success', 'Nivel de riesgo actualizado exitosamente.');
     }
@@ -65,10 +65,10 @@ class NivelRiesgoController extends Controller
     /**
      * Elimina un nivel de riesgo
      */
-    public function destroy(NivelRiesgo $NivelRiesgo)
+    public function destroy(NivelRiesgo $nivel)
     {
         try {
-            $NivelRiesgo->delete();
+            $nivel->delete();
             return redirect()->route('nivel.index')
                 ->with('success', 'Nivel de riesgo eliminado exitosamente.');
         } catch (QueryException $e) {
