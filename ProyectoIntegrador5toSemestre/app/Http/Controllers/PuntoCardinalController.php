@@ -26,7 +26,7 @@ class PuntoCardinalController extends Controller
         if ($request->filled('buscar')) {
             $query->where('nombre', 'like', '%' . $request->buscar . '%');
         }
-        $puntoCardinal = $query->orderBy('id_punto_cardinal', 'desc')->paginate(6);
+        $puntoCardinal = $query->orderBy('id_punto_cardinal', 'desc')->paginate(2)->appends($request->all());
         return view('cardinal.index', compact('puntoCardinal'));
     }
 

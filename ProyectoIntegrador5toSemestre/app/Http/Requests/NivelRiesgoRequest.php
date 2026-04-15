@@ -19,13 +19,12 @@ class NivelRiesgoRequest extends FormRequest
         return [
             'nivel' => [
                 'required',
-                'string',
+                'regex:/^[\pL\s]+$/u', // Solo letras y espacios
                 'max:255',
                 'unique:nivel_riesgos,nivel,' . $id . ',id_nivel_riesgo',
             ],
             'color' => [
                 'required',
-                'string',
                 'max:255',
                 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
             ],
@@ -36,12 +35,11 @@ class NivelRiesgoRequest extends FormRequest
     {
         return [
             'nivel.required' => 'El nivel de riesgo es obligatorio.',
-            'nivel.string'   => 'El nivel debe ser texto.',
+            'nivel.regex'   => 'El nivel solo puede contener letras y espacios.',
             'nivel.max'      => 'El nivel no puede tener más de 255 caracteres.',
             'nivel.unique'   => 'Ya existe un nivel de riesgo con ese nombre.',
 
             'color.required' => 'El color es obligatorio.',
-            'color.string'   => 'El color debe ser texto.',
             'color.max'      => 'El color no puede tener más de 255 caracteres.',
             'color.regex'    => 'El color debe ser un código hexadecimal válido (ej: #FF0000).',
         ];

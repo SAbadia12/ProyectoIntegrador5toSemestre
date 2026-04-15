@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\NivelRiesgoController;
 use App\Http\Controllers\PuntoCardinalController;
+use App\Http\Controllers\RolController;
 use App\Models\NivelRiesgo;
 use App\Models\PuntoCardinal;
 use App\Models\Usuario;
+use App\Models\Rol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +54,7 @@ Route::view('/visitante', 'visitante')->name('visitante');
 
 Route::resource('/nivel', NivelRiesgoController::class);
 Route::resource('/cardinal', PuntoCardinalController::class);
+Route::resource('/rol', RolController::class);
 
 
 Route::get('/export/punto_cardinal', function() {
@@ -60,5 +63,9 @@ Route::get('/export/punto_cardinal', function() {
 
 Route::get('/export/nivel_riesgo', function() {
     return app(PdfController::class)->export(NivelRiesgo::class, 'Niveles de Riesgo', ['ID', 'Nivel', 'Color'], ['id_nivel_riesgo', 'nivel', 'color'], 'niveles.pdf');
+});
+
+Route::get('/export/rol', function() {
+    return app(PdfController::class)->export(Rol::class, 'Roles', ['ID', 'Rol'], ['id_rol', 'rol'], 'roles.pdf');
 });
 

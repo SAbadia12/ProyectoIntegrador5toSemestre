@@ -26,7 +26,7 @@ class NivelRiesgoController extends Controller
         if ($request->filled('buscar')) {
             $query->where('nivel', 'like', '%' . $request->buscar . '%');
         }
-        $nivelRiesgo = $query->orderBy('id_nivel_riesgo', 'desc')->paginate(6);
+        $nivelRiesgo = $query->orderBy('id_nivel_riesgo', 'desc')->paginate(2)->appends($request->all());
         return view('nivel.index', compact('nivelRiesgo'));
     }
 
