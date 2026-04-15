@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PuntoCardinalRequest extends FormRequest
+class RolRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,12 +14,12 @@ class PuntoCardinalRequest extends FormRequest
     public function rules(): array
     {
         // Si es edición, excluye el ID actual en unique
-        $id = $this->route('punto_cardinal')?->id_punto_cardinal;
+        $id = $this->route('rol')?->id_rol;
 
         return [
-            'nombre' => [
+            'rol' => [
                 'required',
-                'regex:/^[\pL\s]+$/u', // Solo letras y espacios
+                'regex:/^[\pL\s]+$/u',
                 'max:255',
                 
             ],
@@ -30,9 +30,9 @@ class PuntoCardinalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.regex'   => 'El nombre solo puede contener letras y espacios.',
-            'nombre.max'      => 'El nombre no puede tener más de 255 caracteres.',
+            'rol.required' => 'El rol es obligatorio.',
+            'rol.regex'   => 'El rol solo puede contener letras y espacios.',
+            'rol.max'      => 'El rol no puede tener más de 255 caracteres.',
             
         ];
     }

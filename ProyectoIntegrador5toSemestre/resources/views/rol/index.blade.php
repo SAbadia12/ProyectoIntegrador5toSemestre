@@ -1,7 +1,7 @@
 @extends("layouts.plantilla")
 
 @section("titulomain")
-Puntos Cardinales
+Roles
 @endsection
 
 @section("contenido")
@@ -16,19 +16,19 @@ Puntos Cardinales
 
     <nav class="nav-botones">
         {{-- formulario para filtros y busqueda --}}
-        <form action="{{ route('cardinal.index') }}" method="GET" class="form-filtros">
-
-            {{-- filtro por nivel --}}
-            <input type="text" name="buscar" placeholder="Buscar Punto Cardinal" value="{{ request('buscar') }}" class="filtro-input">
-            <button type="submit" class="nav-link btn-filtrar">BUSCAR</button>
+        <form action="{{ route('rol.index') }}" method="GET" class="form-filtros">
+            {{-- filtro por rol --}}
+            <input type="text" name="buscar" placeholder="Buscar rol" value="{{ request('buscar') }}" class="filtro-input">
+            <button type="submit" class="nav-link btn-filtrar">Filtrar</button>
+            <a href="{{ route('rol.index') }}" class="nav-link btn-filtrar">Limpiar Filtros</a>
         </form>
         <ul class="nav-menu">
 
             <li class="nav-item">
-                <a href="{{route('cardinal.create')}}" class="nav-link btn-agregar">Agregar Punto Cardinal</a>
+                <a href="{{route('rol.create')}}" class="nav-link btn-agregar">Agregar rol</a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('export/punto_cardinal') }}" class="nav-link btn-agregar" target="_blank">Generar PDF</a>
+                <a href="{{ url('export/rol') }}" class="nav-link btn-agregar" target="_blank">Generar PDF</a>
             </li>
         </ul>
     </nav>
@@ -37,31 +37,31 @@ Puntos Cardinales
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
+                <th>Rol</th>
                 <th>Opciones</th>
             </tr>
         </thead>
-        <tbody class="tabla-PuntoCardinal">
+        <tbody class="tabla-Rol">
 
-            @foreach ($puntoCardinal as $cardinal)
+            @foreach ($roles as $rol)
             <tr>
-                <td>{{$cardinal->id_punto_cardinal}}</td>
-                <td>{{$cardinal->nombre}}</td>
+                <td>{{$rol->id_rol}}</td>
+                <td>{{$rol->rol}}</td>
                 <td>
-                    <a href="{{route('cardinal.show', $cardinal)}}">
+                    <a href="{{route('rol.show', $rol)}}">
                         <img src="img/view.png" alt="">
                     </a>
 
 
 
 
-                    <a href="{{route('cardinal.edit', $cardinal)}}">
+                    <a href="{{route('rol.edit', $rol)}}">
                         <img src="img/lapiz.png" alt="">
                     </a>
 
 
 
-                    <form action="{{route('cardinal.destroy', $cardinal)}}" method="POST" onsubmit="return confimarEliminacion()">
+                    <form action="{{route('rol.destroy', $rol)}}" method="POST" onsubmit="return confimarEliminacion()">
 
                         {{-- permite gemrar el token para enviar por post --}}
                         @csrf
@@ -85,5 +85,5 @@ Puntos Cardinales
 
     </table>
     {{-- Enlaces de paginación --}}
-    {{ $puntoCardinal->links('pagination::bootstrap-4') }}
-@endsection
+    {{ $roles->links('pagination::bootstrap-4') }}
+    @endsection

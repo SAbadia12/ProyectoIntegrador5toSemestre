@@ -49,49 +49,49 @@ td:last-child,th:last-child{
     margin-left: 5px;
     transition: 0.3s ease;
 }
-.tabla-PuntoCardinal td:nth-child(8) img, .tabla-NivelRiesgo td:nth-child(5) img{
+.tabla-PuntoCardinal td:nth-child(8) img, .tabla-NivelRiesgo td:nth-child(5) img, .tabla-Rol td:nth-child(3) img {
     width: 30px;
     height: auto;    
     margin-left: 5px;
     transition: 0.3s ease;
 }
-.tabla-PuntoCardinal td:nth-child(8) input, .tabla-NivelRiesgo td:nth-child(5) input{
+.tabla-PuntoCardinal td:nth-child(8) input, .tabla-NivelRiesgo td:nth-child(5) input, .tabla-Rol td:nth-child(3) input{
     width: 30px;
     height: auto;    
     margin-left: 5px;
     transition: 0.3s ease;
     
 }
-.tabla-PuntoCardinal td:nth-child(8) form, .tabla-NivelRiesgo td:nth-child(5) form{
+.tabla-PuntoCardinal td:nth-child(8) form, .tabla-NivelRiesgo td:nth-child(5) form, .tabla-Rol td:nth-child(3) form{
    
     display: inline-block;
     height: auto;  }  
     
-.tabla-PuntoCardinal td:nth-child(8) img:hover, .tabla-NivelRiesgo td:nth-child(5) img:hover{
+.tabla-PuntoCardinal td:nth-child(8) img:hover, .tabla-NivelRiesgo td:nth-child(5) img:hover, .tabla-Rol td:nth-child(3) img:hover{
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.568);
     height: auto;
     
     margin-left: 5px;
 }
-.tabla-PuntoCardinal td:nth-child(8) input:hover, .tabla-NivelRiesgo td:nth-child(5) input:hover{
+.tabla-PuntoCardinal td:nth-child(8) input:hover, .tabla-NivelRiesgo td:nth-child(5) input:hover, .tabla-Rol td:nth-child(3) input:hover{
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.568);
     height: auto;
     
     margin-left: 5px;
 }
-.tabla-PuntoCardinal td:nth-child(8) a, .tabla-NivelRiesgo td:nth-child(5) a, .tabla-PuntoCardinal td:last-child a{
+.tabla-PuntoCardinal td:nth-child(8) a, .tabla-NivelRiesgo td:nth-child(5) a, .tabla-Rol td:nth-child(3) a{
     text-decoration: none;
     display: inline-block;
 }
 
 
-.tabla-PuntoCardinal tr:nth-child(8),.tabla-NivelRiesgo tr:nth-child(5) {
+.tabla-PuntoCardinal tr:nth-child(8),.tabla-NivelRiesgo tr:nth-child(5), .tabla-Rol tr:nth-child(3){
     background-color: rgba(255,255,255,0.02);
 }
 
-.tabla-NivelRiesgo td:last-child, .tabla-PuntoCardinal td:last-child {
+.tabla-NivelRiesgo td:last-child, .tabla-PuntoCardinal td:last-child, .tabla-Rol td:last-child {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -100,25 +100,25 @@ td:last-child,th:last-child{
     padding-left: 0;
 }
 
-.tabla-NivelRiesgo td:last-child a, .tabla-PuntoCardinal td:last-child a {
+.tabla-NivelRiesgo td:last-child a, .tabla-PuntoCardinal td:last-child a, .tabla-Rol td:last-child a {
     display: inline-block;
     vertical-align: middle;
 }
 
-.tabla-NivelRiesgo td:last-child form, .tabla-PuntoCardinal td:last-child form {
+.tabla-NivelRiesgo td:last-child form, .tabla-PuntoCardinal td:last-child form, .tabla-Rol td:last-child form {
     display: inline-block;
     margin: 0;
     vertical-align: middle;
 }
 
-.tabla-NivelRiesgo td:last-child img, .tabla-PuntoCardinal td:last-child img {
+.tabla-NivelRiesgo td:last-child img, .tabla-PuntoCardinal td:last-child img, .tabla-Rol td:last-child img {
     width: 20px;
     height: auto;
     margin: 0;
     transition: 0.3s ease;
 }
 
-.tabla-NivelRiesgo td:last-child input[type="image"], .tabla-PuntoCardinal td:last-child input[type="image"] {
+.tabla-NivelRiesgo td:last-child input[type="image"], .tabla-PuntoCardinal td:last-child input[type="image"], .tabla-Rol td:last-child input[type="image"] {
     width: 20px;
     height: auto;
     margin: 0;
@@ -126,7 +126,7 @@ td:last-child,th:last-child{
 }
 
 .tabla-NivelRiesgo td:last-child img:hover, .tabla-PuntoCardinal td:last-child img:hover,
-.tabla-NivelRiesgo td:last-child input[type="image"]:hover, .tabla-PuntoCardinal td:last-child input[type="image"]:hover {
+.tabla-NivelRiesgo td:last-child input[type="image"]:hover, .tabla-PuntoCardinal td:last-child input[type="image"]:hover, .tabla-Rol td:last-child input[type="image"]:hover {
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.568);
 }
@@ -137,4 +137,48 @@ tbody tr:nth-child(odd) {
 
 tbody tr:hover {
     background-color: rgba(56, 114, 191, 0.12);
+}
+
+/* Estilos para la paginación de Bootstrap */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.page-item {
+    margin: 0 2px;
+}
+
+.page-link {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    border: 1px solid rgba(56, 114, 191, 0.48);
+    color: #e2e8f0 !important;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background: linear-gradient(135deg, rgba(56, 114, 191, 0.4), rgba(14, 165, 233, 0.3));
+    border-color: #38bdf8;
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(135deg, rgba(56, 114, 191, 0.5), rgba(14, 165, 233, 0.4));
+    border-color: #38bdf8;
+    color: #e2e8f0;
+}
+
+.page-item.disabled .page-link {
+    background: rgba(15, 23, 42, 0.5);
+    color: #e2e8f0;
+    border-color: rgba(56, 114, 191, 0.24);
+    cursor: not-allowed;
 }

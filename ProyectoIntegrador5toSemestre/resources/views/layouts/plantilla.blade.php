@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="img/logoSISC.jpeg" type="image/jpeg">
+    <link rel="icon" href="{{ asset('img/logoSISC.jpeg') }}" type="image/jpeg">
     <title>SISC - Admin Web</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,6 +49,10 @@
             <a href="{{ route('cardinal.index') }}" class="element-slidebar-btn {{ request()->routeIs('cardinal.*') ? 'active' : '' }}">
                 <img src="{{asset('img/puntosCardinales.png')}}" alt="PuntoCardinal">
                 <span>Puntos Cardinales</span>
+            </a>
+            <a href="{{ route('rol.index') }}" class="element-slidebar-btn {{ request()->routeIs('rol.*') ? 'active' : '' }}">
+                <img src="{{asset('img/Roles.png')}}" alt="Roles">
+                <span>Roles</span>
             </a>
         </nav>
         <div class="slidebar-footer">
