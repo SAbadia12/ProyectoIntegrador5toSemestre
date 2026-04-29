@@ -7,9 +7,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfController extends Controller
 {
-    public function export($modelClass, $titulo, $columnas, $atributos, $fileName)
+    public function export($modelClass, $titulo, $columnas, $atributos, $fileName, $registros = null)
     {
-        $registros = $modelClass::all();
+        $registros = $registros ?? $modelClass::all();
 
         $pdf = Pdf::loadView('pdfview', [
             'titulo' => $titulo,

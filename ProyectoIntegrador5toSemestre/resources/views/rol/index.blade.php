@@ -47,10 +47,7 @@ Roles
             <tr>
                 <td>{{$rol->id_rol}}</td>
                 <td>{{$rol->rol}}</td>
-                <td>
-                    <a href="{{route('rol.show', $rol)}}">
-                        <img src="img/view.png" alt="">
-                    </a>
+                <td class="opciones-cell">
 
 
 

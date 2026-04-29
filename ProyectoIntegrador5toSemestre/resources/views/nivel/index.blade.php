@@ -59,10 +59,7 @@ Niveles de Riesgo
                 <td>{{$nivel->id_nivel_riesgo}}</td>
                 <td>{{$nivel->nivel}}</td>
                 <td>{{$nivel->color}}</td>
-                <td>
-                    <a href="{{route('nivel.show', $nivel)}}">
-                        <img src="img/view.png" alt="">
-                    </a>
+                <td class="opciones-cell">
 
 
 
