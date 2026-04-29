@@ -47,10 +47,7 @@ Puntos Cardinales
             <tr>
                 <td>{{$cardinal->id_punto_cardinal}}</td>
                 <td>{{$cardinal->nombre}}</td>
-                <td>
-                    <a href="{{route('cardinal.show', $cardinal)}}">
-                        <img src="img/view.png" alt="">
-                    </a>
+                <td class="opciones-cell">
 
 
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\NivelRiesgoController;
 use App\Http\Controllers\PuntoCardinalController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\UsuarioController;
 use App\Models\NivelRiesgo;
 use App\Models\PuntoCardinal;
 use App\Models\Usuario;
@@ -55,6 +56,7 @@ Route::view('/visitante', 'visitante')->name('visitante');
 Route::resource('/nivel', NivelRiesgoController::class);
 Route::resource('/cardinal', PuntoCardinalController::class);
 Route::resource('/rol', RolController::class);
+Route::resource('/usuario', UsuarioController::class);
 
 
 Route::get('/export/punto_cardinal', function() {
@@ -67,5 +69,19 @@ Route::get('/export/nivel_riesgo', function() {
 
 Route::get('/export/rol', function() {
     return app(PdfController::class)->export(Rol::class, 'Roles', ['ID', 'Rol'], ['id_rol', 'rol'], 'roles.pdf');
+});
+
+Route::get('/export/usuario', function() {
+    $usuarios = Usuario::with('rolRelacion')->get()->map(function($u) {
+        $u->rol = $u->rolRelacion->rol ?? 'Sin rol';
+        return $u;
+    });
+    
+    return app(PdfController::class)->export(Usuario::class, 'Usuarios', 
+        ['ID', 'Nombre', 'Apellido', 'Email', 'Rol'], 
+        ['id_usuario', 'nombre', 'apellido', 'email', 'rol'], 
+        'usuarios.pdf',
+        $usuarios  // ← pasas la colección ya preparada
+    );
 });
 

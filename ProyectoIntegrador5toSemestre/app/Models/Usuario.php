@@ -22,7 +22,7 @@ class Usuario extends Model
         'rol',
     ];
 
-    public function rol()
+    public function rolRelacion()
     {
         return $this->belongsTo(Rol::class, 'rol', 'id_rol');
     }

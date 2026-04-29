@@ -54,6 +54,10 @@
                 <img src="{{asset('img/Roles.png')}}" alt="Roles">
                 <span>Roles</span>
             </a>
+            <a href="{{ route('usuario.index') }}" class="element-slidebar-btn {{ request()->routeIs('usuario.*') ? 'active' : '' }}">
+                <img src="{{asset('img/Usuarios.png')}}" alt="Usuarios">
+                <span>Usuarios</span>
+            </a>
         </nav>
         <div class="slidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
