@@ -29,7 +29,7 @@
                 <select id="id_zona" name="id_zona" required class="form-control">
                     <option value="">Seleccione una zona</option>
                     @foreach($zonas as $zona)
-                        <option value="{{ $zona->id_zona }}" {{ old('id_zona', $subzonas->id_zona) == $zona->id_zona ? 'selected' : '' }}>{{ $zona->nombre }}</option>
+                        <option value="{{ $zona->id_zona }}" {{ old('id_zona', $subzonas->id_zona) == $zona->id_zona ? 'selected' : '' }}>{{ $zona->zona }}</option>
                     @endforeach
                 </select>
             </div>

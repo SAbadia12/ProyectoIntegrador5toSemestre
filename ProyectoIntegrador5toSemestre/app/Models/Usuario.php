@@ -17,9 +17,14 @@ class Usuario extends Model
         'nombre',
         'apellido',
         'imagen',
-        'email',    
+        'email',
         'password',
         'rol',
+        'activo',
+    ];
+
+    protected $casts = [
+        'activo' => 'boolean',
     ];
 
     public function rolRelacion()
