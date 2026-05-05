@@ -4,10 +4,18 @@ use App\Http\Controllers\NivelRiesgoController;
 use App\Http\Controllers\PuntoCardinalController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ZonasTipoController;
+use App\Http\Controllers\ZonasController;
+use App\Http\Controllers\SubzonasTipoController;
+use App\Http\Controllers\SubzonasController;
 use App\Models\NivelRiesgo;
 use App\Models\PuntoCardinal;
 use App\Models\Usuario;
 use App\Models\Rol;
+use App\Models\ZonasTipo;
+use App\Models\Zonas;
+use App\Models\SubzonasTipo;
+use App\Models\Subzonas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +65,10 @@ Route::resource('/nivel', NivelRiesgoController::class);
 Route::resource('/cardinal', PuntoCardinalController::class);
 Route::resource('/rol', RolController::class);
 Route::resource('/usuario', UsuarioController::class);
+Route::resource('/zonas_tipo', ZonasTipoController::class);
+Route::resource('/zonas', ZonasController::class);
+Route::resource('/subzonas_tipo', SubzonasTipoController::class);
+Route::resource('/subzonas', SubzonasController::class);
 
 
 Route::get('/export/punto_cardinal', function() {
@@ -82,6 +94,43 @@ Route::get('/export/usuario', function() {
         ['id_usuario', 'nombre', 'apellido', 'email', 'rol'], 
         'usuarios.pdf',
         $usuarios  // ← pasas la colección ya preparada
+    );
+});
+
+Route::get('/export/zonas_tipo', function() {
+    return app(PdfController::class)->export(ZonasTipo::class, 'Tipos de Zona', ['ID', 'Tipo'], ['id_tipo', 'tipo'], 'zonas_tipos.pdf');
+});
+
+Route::get('/export/zonas', function() {
+    $zonas = Zonas::with('zonasTipo')->get()->map(function($z) {
+        $z->tipo = $z->zonasTipo->tipo ?? 'Sin tipo';
+        return $z;
+    });
+    
+    return app(PdfController::class)->export(Zonas::class, 'Zonas', 
+        ['ID', 'Zona', 'Tipo'], 
+        ['id_zona', 'zona', 'tipo'], 
+        'zonas.pdf',
+        $zonas
+    );
+});
+
+Route::get('/export/subzonas_tipo', function() {
+    return app(PdfController::class)->export(SubzonasTipo::class, 'Subtipos de Zona', ['ID', 'Subtipo'], ['id_subtipo', 'subtipo'], 'subzonas_tipos.pdf');
+});
+
+Route::get('/export/subzonas', function() {
+    $subzonas = Subzonas::with(['zona', 'subzonasTipo'])->get()->map(function ($s) {
+        $s->zona = $s->zona->zona ?? 'Sin zona';
+        $s->subtipo = $s->subzonasTipo->subtipo ?? 'Sin subtipo';
+        return $s;
+    });
+    
+    return app(PdfController::class)->export(Subzonas::class, 'Subzonas', 
+        ['ID', 'Subzona', 'Zona', 'Subtipo'], 
+        ['id_subzona', 'subzona', 'zona', 'subtipo'], 
+        'subzonas.pdf',
+        $subzonas
     );
 });
 
