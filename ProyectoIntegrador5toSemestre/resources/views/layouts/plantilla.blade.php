@@ -58,6 +58,32 @@
                 <img src="{{asset('img/Usuarios.png')}}" alt="Usuarios">
                 <span>Usuarios</span>
             </a>
+
+            <button type="button" class="accordion-btn" id="zonas-accordion-btn">
+                <div class="accordion-header">
+                    <img src="{{asset('img/Zonas.png')}}" alt="Config Zonas">
+                    <span>Config Zonas</span>
+                </div>
+                <span class="accordion-icon">›</span>
+            </button>
+            <div class="accordion-content" id="zonas-accordion-content">
+                <a href="{{ route('zonas_tipo.index') }}" class="element-slidebar-btn accordion-item {{ request()->routeIs('zonas_tipo.*') ? 'active' : '' }}">
+                    <img src="{{asset('img/Zonas.png')}}" alt="ZonasTipo">
+                    <span>Tipos de Zona</span>
+                </a>
+                <a href="{{ route('zonas.index') }}" class="element-slidebar-btn accordion-item {{ request()->routeIs('zonas.*') ? 'active' : '' }}">
+                    <img src="{{asset('img/Zonas.png')}}" alt="Zonas">
+                    <span>Zonas</span>
+                </a>
+                <a href="{{ route('subzonas_tipo.index') }}" class="element-slidebar-btn accordion-item {{ request()->routeIs('subzonas_tipo.*') ? 'active' : '' }}">
+                    <img src="{{asset('img/Zonas.png')}}" alt="SubzonasTipo">
+                    <span>Subtipos de Zona</span>
+                </a>
+                <a href="{{ route('subzonas.index') }}" class="element-slidebar-btn accordion-item {{ request()->routeIs('subzonas.*') ? 'active' : '' }}">
+                    <img src="{{asset('img/Zonas.png')}}" alt="Subzonas">
+                    <span>Subzonas</span>
+                </a>
+            </div>
         </nav>
         <div class="slidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
