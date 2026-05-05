@@ -31,8 +31,6 @@ Internamente, el sistema incluye un **panel administrativo** con dashboard de m�
 
 | Integrante |
 |---|
-| Anyelo Gustavo Chitán Hernández |
-| Tania Isadora Mora Pedrero |
 | Sebastián Abadía |
 | Juan Sebastián Almendra |
 | Daniel Campo |
