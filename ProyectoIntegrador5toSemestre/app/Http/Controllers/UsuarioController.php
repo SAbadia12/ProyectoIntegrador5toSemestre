@@ -152,4 +152,27 @@ class UsuarioController extends Controller
                 ->with('error', 'Ocurrió un error inesperado al eliminar.');
         }
     }
+
+    /**
+     * RF16 - Activar/desactivar usuario.
+     * No elimina el registro; solo cambia el flag 'activo'.
+     * Un usuario desactivado no puede iniciar sesión.
+     */
+    public function toggleActivo(Request $request, Usuario $usuario)
+    {
+        // Evitar que un admin se desactive a sí mismo
+        if ((int) $usuario->id_usuario === (int) $request->session()->get('logged_user')) {
+            return redirect()->route('usuario.index')
+                ->with('error', 'No puedes desactivar tu propia cuenta.');
+        }
+
+        $usuario->activo = ! $usuario->activo;
+        $usuario->save();
+
+        $msg = $usuario->activo
+            ? 'Usuario activado correctamente.'
+            : 'Usuario desactivado correctamente.';
+
+        return redirect()->route('usuario.index')->with('success', $msg);
+    }
 }

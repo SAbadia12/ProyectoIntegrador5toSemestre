@@ -84,6 +84,12 @@
                     <span>Subzonas</span>
                 </a>
             </div>
+
+            {{-- Ubicaciones (entidad central del MER) --}}
+            <a href="{{ route('ubicacion.index') }}" class="element-slidebar-btn {{ request()->routeIs('ubicacion.*') ? 'active' : '' }}">
+                <img src="{{asset('img/puntosCardinales.png')}}" alt="Ubicaciones">
+                <span>Ubicaciones</span>
+            </a>
         </nav>
         <div class="slidebar-footer">
             <form method="POST" action="{{ route('logout') }}">

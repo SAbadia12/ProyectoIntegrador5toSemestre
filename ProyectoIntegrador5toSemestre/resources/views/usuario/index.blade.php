@@ -12,6 +12,11 @@ Usuarios
     {{ session('error') }}
 </div>
 @endif
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
 <section class="container-tabla">
 
     <nav class="nav-botones">
@@ -44,6 +49,7 @@ Usuarios
                     <th>Imagen</th>
                     <th>Email</th>
                     <th>Rol</th>
+                    <th>Estado</th>
                     <th>Opciones</th>
                 </tr>
             </thead>
@@ -57,14 +63,35 @@ Usuarios
                     <td>{{$usuario->email}}</td>
                     <td>{{ $usuario->rolRelacion->rol ?? 'Sin rol' }}</td>
                     <td>
+                        @if($usuario->activo)
+                            <span class="badge-activo" style="background:#28a745;color:#fff;padding:4px 8px;border-radius:4px;font-size:12px;">Activo</span>
+                        @else
+                            <span class="badge-inactivo" style="background:#dc3545;color:#fff;padding:4px 8px;border-radius:4px;font-size:12px;">Inactivo</span>
+                        @endif
+                    </td>
+                    <td>
                         <div class="opciones-cell">
-                            <a href="{{route('usuario.edit', $usuario)}}">
-                                <img src="img/lapiz.png" alt="">
+                            <a href="{{route('usuario.edit', $usuario)}}" title="Editar">
+                                <img src="img/lapiz.png" alt="Editar">
                             </a>
-                            <form action="{{route('usuario.destroy', $usuario)}}" method="POST" onsubmit="return confirmarEliminacion()">
+
+                            {{-- RF16: Botón activar/desactivar --}}
+                            <form action="{{ route('usuario.toggleActivo', $usuario) }}" method="POST" style="display:inline;" onsubmit="return confirmarToggle({{ $usuario->activo ? 'true' : 'false' }})">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn-toggle" title="{{ $usuario->activo ? 'Desactivar' : 'Activar' }}" style="background:none;border:none;cursor:pointer;padding:0;">
+                                    @if($usuario->activo)
+                                        <span style="color:#dc3545;font-weight:bold;font-size:18px;">⏻</span>
+                                    @else
+                                        <span style="color:#28a745;font-weight:bold;font-size:18px;">✓</span>
+                                    @endif
+                                </button>
+                            </form>
+
+                            <form action="{{route('usuario.destroy', $usuario)}}" method="POST" onsubmit="return confirmarEliminacion()" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <input type="image" src="img/basura.png">
+                                <input type="image" src="img/basura.png" alt="Eliminar">
                             </form>
                         </div>
                     </td>
@@ -78,6 +105,10 @@ Usuarios
     <script>
         function confirmarEliminacion() {
             return confirm('¿Seguro deseas eliminar?');
+        }
+        function confirmarToggle(estaActivo) {
+            const accion = estaActivo ? 'desactivar' : 'activar';
+            return confirm(`¿Seguro deseas ${accion} este usuario?`);
         }
     </script>
 

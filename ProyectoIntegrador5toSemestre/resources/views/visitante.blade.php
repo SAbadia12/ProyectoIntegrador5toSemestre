@@ -37,8 +37,11 @@
         </div>
     </div>
 
-    {{-- Botón Administrador → menú de selección de Laravel --}}
-    <div class="nav-right">
+    {{-- Botón Líneas de emergencia (RF22) + Administrador --}}
+    <div class="nav-right" style="display:flex; gap:10px; align-items:center;">
+        <a href="{{ route('emergencias') }}" class="btn-admin-link" style="background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;">
+            🚨 Emergencias
+        </a>
         <a href="{{ route('home') }}" class="btn-admin-link">
             🔐 Administrador
         </a>
@@ -57,10 +60,10 @@
                 <div class="hero-sub">Cali, Valle del Cauca · Datos actualizados en tiempo real</div>
             </div>
             <div class="stat-pills">
-                <div class="stat-pill"><span class="num">954</span><span class="lbl">Homicidios 2023</span></div>
-                <div class="stat-pill"><span class="num">22</span><span class="lbl">Comunas</span></div>
-                <div class="stat-pill"><span class="num">369</span><span class="lbl">Ag. Aguablanca</span></div>
-                <div class="stat-pill"><span class="num">40</span><span class="lbl">Est. de Policía</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['homicidios'] ?? 0 }}</span><span class="lbl">Homicidios último año</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['comunas'] ?? 0 }}</span><span class="lbl">Comunas</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['aguablanca'] ?? 0 }}</span><span class="lbl">Ag. Aguablanca</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['estaciones'] ?? 0 }}</span><span class="lbl">Est. de Policía</span></div>
             </div>
         </div>
 
