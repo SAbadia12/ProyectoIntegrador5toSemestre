@@ -90,6 +90,14 @@
                 <img src="{{asset('img/puntosCardinales.png')}}" alt="Ubicaciones">
                 <span>Ubicaciones</span>
             </a>
+
+            {{-- Comentarios (RF11, RF13) - moderador --}}
+            @if(in_array((int) session('logged_user_rol'), [1, 2]))
+            <a href="{{ route('comentario.index') }}" class="element-slidebar-btn {{ request()->routeIs('comentario.*') ? 'active' : '' }}">
+                <img src="{{asset('img/Roles.png')}}" alt="Comentarios">
+                <span>Comentarios</span>
+            </a>
+            @endif
         </nav>
         <div class="slidebar-footer">
             <form method="POST" action="{{ route('logout') }}">

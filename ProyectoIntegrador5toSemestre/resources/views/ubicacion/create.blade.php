@@ -26,6 +26,16 @@
             </div>
 
             <div class="form-group">
+                <label for="latitud">Latitud (opcional, para mapa)</label>
+                <input type="number" step="0.0000001" id="latitud" name="latitud" value="{{ old('latitud') }}" class="form-control" placeholder="Ej: 3.4516">
+            </div>
+
+            <div class="form-group">
+                <label for="longitud">Longitud (opcional, para mapa)</label>
+                <input type="number" step="0.0000001" id="longitud" name="longitud" value="{{ old('longitud') }}" class="form-control" placeholder="Ej: -76.5320">
+            </div>
+
+            <div class="form-group">
                 <label for="id_nivel">Nivel de Riesgo</label>
                 <select id="id_nivel" name="id_nivel" required class="form-control">
                     <option value="">Seleccione un nivel de riesgo</option>

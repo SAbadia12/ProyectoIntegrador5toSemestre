@@ -22,9 +22,16 @@ class Ubicacion extends Model
 
     protected $fillable = [
         'direccion',
+        'latitud',
+        'longitud',
         'id_nivel',
         'id_punto_cardinal',
         'id_zona',
+    ];
+
+    protected $casts = [
+        'latitud'  => 'float',
+        'longitud' => 'float',
     ];
 
     public function nivel()

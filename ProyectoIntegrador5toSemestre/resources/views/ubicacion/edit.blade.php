@@ -29,6 +29,20 @@
             </div>
 
             <div class="form-group">
+                <label for="latitud">Latitud</label>
+                <input type="number" step="0.0000001" id="latitud" name="latitud"
+                       value="{{ old('latitud', $ubicacion->latitud) }}"
+                       class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="longitud">Longitud</label>
+                <input type="number" step="0.0000001" id="longitud" name="longitud"
+                       value="{{ old('longitud', $ubicacion->longitud) }}"
+                       class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="id_nivel">Nivel de Riesgo</label>
                 <select id="id_nivel" name="id_nivel" required class="form-control">
                     @foreach($niveles as $n)

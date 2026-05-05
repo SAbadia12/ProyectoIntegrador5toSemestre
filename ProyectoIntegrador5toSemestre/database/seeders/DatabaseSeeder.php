@@ -23,9 +23,22 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // ── Catálogos base ──────────────────────────────
             NivelRiesgoSeeder::class,
+            PuntoCardinalSeeder::class,
+            ZonasTipoSeeder::class,
+            SubzonasTipoSeeder::class,
+
+            // ── Datos geográficos ───────────────────────────
+            ZonasSeeder::class,
+            SubzonasSeeder::class,
+            UbicacionSeeder::class,
+
+            // ── Legado (compatibilidad con dashboard) ───────
             ComunaSeeder::class,
             EstacionPoliciaSeeder::class,
+
+            // ── Usuarios y delitos ──────────────────────────
             UsuarioSeeder::class,
             DelitoSeeder::class,
         ]);

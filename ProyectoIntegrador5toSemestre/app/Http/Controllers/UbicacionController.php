@@ -60,6 +60,8 @@ class UbicacionController extends Controller
     {
         $validated = $request->validate([
             'direccion'         => 'required|string|max:255',
+            'latitud'           => 'nullable|numeric|between:-90,90',
+            'longitud'          => 'nullable|numeric|between:-180,180',
             'id_nivel'          => 'required|integer|exists:nivel_riesgos,id_nivel_riesgo',
             'id_punto_cardinal' => 'required|integer|exists:puntos_cardinales,id_punto_cardinal',
             'id_zona'           => 'required|integer|exists:zonas,id_zona',
@@ -99,6 +101,8 @@ class UbicacionController extends Controller
     {
         $validated = $request->validate([
             'direccion'         => 'required|string|max:255',
+            'latitud'           => 'nullable|numeric|between:-90,90',
+            'longitud'          => 'nullable|numeric|between:-180,180',
             'id_nivel'          => 'required|integer|exists:nivel_riesgos,id_nivel_riesgo',
             'id_punto_cardinal' => 'required|integer|exists:puntos_cardinales,id_punto_cardinal',
             'id_zona'           => 'required|integer|exists:zonas,id_zona',
