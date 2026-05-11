@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * Tiene 3 FKs:
  *   - nivel (NivelRiesgo)
  *   - puntoCardinal (PuntoCardinal)
- *   - zona (Zonas, modelo de tu compañero)
+ *   - subzona (Subzonas, modelo de tu compañero)
  */
 class Ubicacion extends Model
 {
@@ -26,7 +26,7 @@ class Ubicacion extends Model
         'longitud',
         'id_nivel',
         'id_punto_cardinal',
-        'id_zona',
+        'id_subzona',
     ];
 
     protected $casts = [
@@ -44,8 +44,25 @@ class Ubicacion extends Model
         return $this->belongsTo(PuntoCardinal::class, 'id_punto_cardinal', 'id_punto_cardinal');
     }
 
-    public function zona()
+    public function subzona()
     {
-        return $this->belongsTo(Zonas::class, 'id_zona', 'id_zona');
+        return $this->belongsTo(Subzonas::class, 'id_subzona', 'id_subzona');
+    }
+
+    /**
+     * Relación many-to-many con Delitos.
+     * Una ubicación puede tener múltiples delitos,
+     * y un delito puede ocurrir en múltiples ubicaciones.
+     * Cada relación tiene su propia fecha.
+     */
+    public function delitos()
+    {
+        return $this->belongsToMany(
+            Delito::class,
+            'delito_ubicacion',
+            'id_ubicacion',
+            'id_delito'
+        )->withPivot('fecha')
+         ->withTimestamps();
     }
 }

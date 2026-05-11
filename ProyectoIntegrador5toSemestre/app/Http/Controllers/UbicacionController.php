@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NivelRiesgo;
 use App\Models\PuntoCardinal;
 use App\Models\Ubicacion;
-use App\Models\Zonas;
+use App\Models\Subzonas;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class UbicacionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ubicacion::with(['nivel', 'puntoCardinal', 'zona']);
+        $query = Ubicacion::with(['nivel', 'puntoCardinal', 'subzona']);
 
         if ($request->filled('buscar')) {
             $query->where('direccion', 'like', '%' . $request->buscar . '%');
@@ -26,8 +26,8 @@ class UbicacionController extends Controller
             $query->where('id_nivel', $request->nivel);
         }
 
-        if ($request->filled('zona')) {
-            $query->where('id_zona', $request->zona);
+        if ($request->filled('subzona')) {
+            $query->where('id_subzona', $request->subzona);
         }
 
         $ubicaciones = $query->orderBy('id_ubicacion', 'desc')
@@ -36,9 +36,9 @@ class UbicacionController extends Controller
 
         // Para el dropdown de filtros
         $niveles = NivelRiesgo::all();
-        $zonas   = Zonas::all();
+        $subzonas   = Subzonas::all();
 
-        return view('ubicacion.index', compact('ubicaciones', 'niveles', 'zonas'));
+        return view('ubicacion.index', compact('ubicaciones', 'niveles', 'subzonas'));
     }
 
     /**
@@ -48,9 +48,9 @@ class UbicacionController extends Controller
     {
         $niveles         = NivelRiesgo::all();
         $puntosCardinales = PuntoCardinal::all();
-        $zonas           = Zonas::all();
+        $subzonas           = Subzonas::all();
 
-        return view('ubicacion.create', compact('niveles', 'puntosCardinales', 'zonas'));
+        return view('ubicacion.create', compact('niveles', 'puntosCardinales', 'subzonas'));
     }
 
     /**
@@ -64,13 +64,13 @@ class UbicacionController extends Controller
             'longitud'          => 'nullable|numeric|between:-180,180',
             'id_nivel'          => 'required|integer|exists:nivel_riesgos,id_nivel_riesgo',
             'id_punto_cardinal' => 'required|integer|exists:puntos_cardinales,id_punto_cardinal',
-            'id_zona'           => 'required|integer|exists:zonas,id_zona',
+            'id_subzona'           => 'required|integer|exists:subzonas,id_subzona',
         ]);
 
         Ubicacion::create($validated);
 
         return redirect()->route('ubicacion.index')
-            ->with('success', 'Ubicación creada exitosamente.');
+            ->with('success', 'Ubicación creada exitosamente');
     }
 
     /**
@@ -78,7 +78,7 @@ class UbicacionController extends Controller
      */
     public function show(Ubicacion $ubicacion)
     {
-        $ubicacion->load(['nivel', 'puntoCardinal', 'zona']);
+        $ubicacion->load(['nivel', 'puntoCardinal', 'subzona']);
         return view('ubicacion.show', compact('ubicacion'));
     }
 
@@ -89,9 +89,9 @@ class UbicacionController extends Controller
     {
         $niveles         = NivelRiesgo::all();
         $puntosCardinales = PuntoCardinal::all();
-        $zonas           = Zonas::all();
+        $subzonas           = Subzonas::all();
 
-        return view('ubicacion.edit', compact('ubicacion', 'niveles', 'puntosCardinales', 'zonas'));
+        return view('ubicacion.edit', compact('ubicacion', 'niveles', 'puntosCardinales', 'subzonas'));
     }
 
     /**
@@ -105,13 +105,13 @@ class UbicacionController extends Controller
             'longitud'          => 'nullable|numeric|between:-180,180',
             'id_nivel'          => 'required|integer|exists:nivel_riesgos,id_nivel_riesgo',
             'id_punto_cardinal' => 'required|integer|exists:puntos_cardinales,id_punto_cardinal',
-            'id_zona'           => 'required|integer|exists:zonas,id_zona',
+            'id_subzona'           => 'required|integer|exists:subzonas,id_subzona',
         ]);
 
         $ubicacion->update($validated);
 
         return redirect()->route('ubicacion.index')
-            ->with('success', 'Ubicación actualizada exitosamente.');
+            ->with('success', 'Ubicación actualizada exitosamente');
     }
 
     /**

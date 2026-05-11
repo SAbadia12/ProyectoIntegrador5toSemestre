@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('telefono')->nullable();
             $table->decimal('latitud', 10, 7);
             $table->decimal('longitud', 10, 7);
-            $table->unsignedBigInteger('id_comuna')->nullable();
+            $table->unsignedBigInteger('id_subzona')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_comuna')
-                ->references('id_comuna')->on('comunas')
+            $table->foreign('id_subzona')
+                ->references('id_subzona')->on('subzonas')
                 ->nullOnDelete();
         });
     }

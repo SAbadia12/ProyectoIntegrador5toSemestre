@@ -63,10 +63,14 @@
                 <div class="hero-sub">Cali, Valle del Cauca · Datos actualizados en tiempo real</div>
             </div>
             <div class="stat-pills">
-                <div class="stat-pill"><span class="num">{{ $stats['homicidios'] ?? 0 }}</span><span class="lbl">Homicidios último año</span></div>
-                <div class="stat-pill"><span class="num">{{ $stats['comunas'] ?? 0 }}</span><span class="lbl">Comunas</span></div>
-                <div class="stat-pill"><span class="num">{{ $stats['aguablanca'] ?? 0 }}</span><span class="lbl">Ag. Aguablanca</span></div>
-                <div class="stat-pill"><span class="num">{{ $stats['estaciones'] ?? 0 }}</span><span class="lbl">Est. de Policía</span></div>
+                <div class="stat-pill"><span class="num">{{ number_format($stats['total_delitos']) }}</span><span class="lbl">Total Delitos</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['homicidios'] }}</span><span class="lbl">Homicidios</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['hurto_personas'] }}</span><span class="lbl">Hurto Personas</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['hurto_vehiculos'] }}</span><span class="lbl">Hurto Vehículos</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['hurto_residencias'] }}</span><span class="lbl">Hurto Residencias</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['estaciones'] }}</span><span class="lbl">Est. Policía</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['zonas_cubiertas'] }}</span><span class="lbl">Zonas Cubiertas</span></div>
+                <div class="stat-pill"><span class="num">{{ $stats['delitos_mes'] }}</span><span class="lbl">Delitos este mes</span></div>
             </div>
         </div>
 
@@ -95,10 +99,10 @@
                 <div class="chat-messages" id="chat-messages"></div>
                 <div class="quick-questions" id="quick-questions">
                     <button class="quick-btn" onclick="sendQuick('¿Cuáles son los barrios más seguros de Cali?')">🟢 Barrios seguros</button>
-                    <button class="quick-btn" onclick="sendQuick('¿Qué delitos son más frecuentes en Aguablanca?')">⚠️ Aguablanca</button>
+                    <button class="quick-btn" onclick="sendQuick('¿Qué zonas tienen riesgo medio?')">🟠 Riesgo medio</button>
                     <button class="quick-btn" onclick="sendQuick('¿Dónde puedo denunciar en Cali?')">📍 Dónde denunciar</button>
-                    <button class="quick-btn" onclick="sendQuick('¿Cuáles son las comunas con mayor riesgo?')">🔴 Alto riesgo</button>
-                    <button class="quick-btn" onclick="sendQuick('¿Qué pasó en Siloé en 2023?')">📊 Siloé</button>
+                    <button class="quick-btn" onclick="sendQuick('¿Cuáles son las zonas con mayor riesgo?')">🔴 Alto riesgo</button>
+                    <button class="quick-btn" onclick="sendQuick('¿Qué delitos son más frecuentes en Cali?')">📊 Delitos frecuentes</button>
                     <button class="quick-btn" onclick="sendQuick('Recomendaciones de seguridad')">🛡️ Recomendaciones</button>
                 </div>
                 <div class="chat-input-area">
@@ -252,21 +256,38 @@
 
     // Barrios seguros
     if (CHAT_BD.barrios_seguros && CHAT_BD.barrios_seguros.length) {
-      r.seguros = `🟢 <strong>Zonas con riesgo BAJO en Cali:</strong><br>` +
+      r.seguras = `🟢 <strong>Zonas con riesgo BAJO en Cali:</strong><br>` +
         CHAT_BD.barrios_seguros.map(b => `• ${b}`).join('<br>') +
-        `<br><br>Estas zonas registran las tasas más bajas de delitos según nuestra base de datos.`;
+        `<br><br>Estas zonas tienen los niveles de riesgo más bajos registrados en la base de datos.`;
     } else {
-      r.seguros = `🟢 No hay zonas registradas con nivel de riesgo bajo aún.`;
+      r.seguras = `🟢 No hay zonas registradas con nivel de riesgo bajo aún.`;
     }
 
-    // Aguablanca
-    if (CHAT_BD.aguablanca_top && CHAT_BD.aguablanca_top.length) {
-      const top = CHAT_BD.aguablanca_top.map(d => `• ${d.tipo}: <strong>${d.total}</strong> casos`).join('<br>');
-      r.aguablanca = `⚠️ <strong>Distrito de Aguablanca</strong> (Comunas 13, 14, 15, 21):<br>` +
-        `Total: <strong>${CHAT_BD.aguablanca_total}</strong> delitos registrados.<br><br>` +
-        `Tipos más frecuentes:<br>${top}`;
+    // Zonas de riesgo medio
+    if (CHAT_BD.medio_riesgo && CHAT_BD.medio_riesgo.length) {
+      r.medio = `🟠 <strong>Zonas con riesgo MEDIO en Cali:</strong><br>` +
+        CHAT_BD.medio_riesgo.map(b => `• ${b}`).join('<br>') +
+        `<br><br>Estas ubicaciones requieren mayor atención al transitar.`;
     } else {
-      r.aguablanca = `⚠️ No hay datos de delitos en Aguablanca.`;
+      r.medio = `🟠 No hay zonas registradas con riesgo medio aún.`;
+    }
+
+    // Zonas de alto riesgo
+    if (CHAT_BD.alto_riesgo && CHAT_BD.alto_riesgo.length) {
+      r.alto = `🔴 <strong>Zonas con riesgo ALTO en Cali:</strong><br>` +
+        CHAT_BD.alto_riesgo.map(z => `• ${z}`).join('<br>') +
+        `<br><br>Recomendamos evitar estas zonas siempre que sea posible.`;
+    } else {
+      r.alto = `🔴 No hay zonas registradas con riesgo alto.`;
+    }
+
+    // Delitos frecuentes
+    if (CHAT_BD.top_delitos && CHAT_BD.top_delitos.length) {
+      r.delitos = `📊 <strong>Delitos más frecuentes en la base de datos:</strong><br>` +
+        CHAT_BD.top_delitos.map(d => `• ${d.tipo}: <strong>${d.total}</strong>`).join('<br>') +
+        `<br><br>Estos son los tipos de delito con más registros.`;
+    } else {
+      r.delitos = `📊 No hay datos suficientes de delitos aún.`;
     }
 
     // Dónde denunciar
@@ -279,25 +300,6 @@
       r.denunciar = `📍 No hay estaciones de policía registradas.`;
     }
 
-    // Alto riesgo
-    if (CHAT_BD.alto_riesgo && CHAT_BD.alto_riesgo.length) {
-      r.comunas = `🔴 <strong>Zonas con riesgo ALTO en Cali:</strong><br>` +
-        CHAT_BD.alto_riesgo.map(z => `• ${z}`).join('<br>') +
-        `<br><br>Recomendamos extremar precauciones en estas zonas.`;
-    } else {
-      r.comunas = `🔴 No hay zonas registradas con riesgo alto.`;
-    }
-
-    // Siloé
-    if (CHAT_BD.siloe_top && CHAT_BD.siloe_top.length) {
-      const top = CHAT_BD.siloe_top.map(d => `• ${d.tipo}: <strong>${d.total}</strong> casos`).join('<br>');
-      r.siloe = `📊 <strong>Siloé (Comuna 20):</strong><br>` +
-        `Total: <strong>${CHAT_BD.siloe_total}</strong> delitos registrados<br><br>` +
-        `Tipos principales:<br>${top}`;
-    } else {
-      r.siloe = `📊 No hay datos suficientes de Siloé.`;
-    }
-
     // Recomendaciones (estática)
     r.recomendaciones = `🛡️ <strong>Recomendaciones de seguridad:</strong><br>` +
       `• Evita zonas de riesgo alto en horarios nocturnos<br>` +
@@ -306,7 +308,7 @@
       `• No exhibas objetos de valor en la calle<br>` +
       `• Consulta el mapa antes de visitar una zona desconocida`;
 
-    r.default = `No tengo datos específicos sobre eso. Consulta el mapa interactivo, los botones de consulta rápida, o llama al <strong>📞 123</strong> para emergencias.`;
+    r.default = `No tengo datos específicos sobre eso. Usa el mapa interactivo, los botones de consulta rápida o llama al <strong>📞 123</strong> para emergencias.`;
 
     return r;
   }
@@ -316,14 +318,15 @@
   // Override de getResponse de sis-cali.js para usar nuestros datos
   window.getResponse = async function (q) {
     const ql = q.toLowerCase();
-    if (ql.includes('segur') || ql.includes('tranquil'))             return CHAT_RESPUESTAS_BD.seguros;
-    if (ql.includes('aguablanca') || ql.includes('mojica'))          return CHAT_RESPUESTAS_BD.aguablanca;
+    if (ql.includes('medio') || ql.includes('naranja'))              return CHAT_RESPUESTAS_BD.medio;
+    if (ql.includes('alto') || ql.includes('mayor riesgo'))          return CHAT_RESPUESTAS_BD.alto;
+    if (ql.includes('segur') || ql.includes('tranquil') || ql.includes('bajo')) return CHAT_RESPUESTAS_BD.seguras;
+    if (ql.includes('delito') || ql.includes('frecuent'))            return CHAT_RESPUESTAS_BD.delitos;
     if (ql.includes('denunci') || ql.includes('policia') || ql.includes('policía')) return CHAT_RESPUESTAS_BD.denunciar;
-    if (ql.includes('riesgo') || ql.includes('peligros'))            return CHAT_RESPUESTAS_BD.comunas;
-    if (ql.includes('siloé') || ql.includes('siloe'))                return CHAT_RESPUESTAS_BD.siloe;
     if (ql.includes('recomenda') || ql.includes('consejo'))          return CHAT_RESPUESTAS_BD.recomendaciones;
+    if (ql.includes('riesgo'))                                        return CHAT_RESPUESTAS_BD.alto;
     return CHAT_RESPUESTAS_BD.default;
-  };
+};
 
   // ════════════════════════════════════════════════════════════
   // MODAL COMENTARIOS (RF5)

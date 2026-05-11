@@ -18,38 +18,28 @@ class Delito extends Model
 
     protected $fillable = [
         'tipo',
-        'id_comuna',
-        'fecha',
         'gravedad',
         'descripcion',
     ];
 
     protected $casts = [
-        'fecha'    => 'date',
         'gravedad' => 'integer',
     ];
 
     /**
-     * Lista canónica de tipos de delito (para selects, filtros, validación).
+     * Relación many-to-many con Ubicaciones.
+     * Un delito puede ocurrir en múltiples ubicaciones,
+     * y una ubicación puede tener múltiples delitos.
+     * Cada relación tiene su propia fecha.
      */
-    public static function tipos(): array
+    public function ubicaciones()
     {
-        return [
-            'Hurto a personas',
-            'Hurto a residencias',
-            'Hurto a comercio',
-            'Hurto de vehículos',
-            'Hurto de motos',
-            'Homicidio',
-            'Lesiones personales',
-            'Violencia intrafamiliar',
-            'Extorsión',
-            'Secuestro',
-        ];
-    }
-
-    public function comuna()
-    {
-        return $this->belongsTo(Comuna::class, 'id_comuna', 'id_comuna');
+        return $this->belongsToMany(
+            Ubicacion::class,
+            'delito_ubicacion',
+            'id_delito',
+            'id_ubicacion'
+        )->withPivot('fecha')
+         ->withTimestamps();
     }
 }

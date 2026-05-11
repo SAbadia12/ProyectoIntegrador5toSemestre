@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comuna;
 use App\Models\Delito;
 use App\Models\EstacionPolicia;
 use App\Models\Usuario;
@@ -26,23 +25,27 @@ class DashboardController extends Controller
         // ──────────────────────────────────────────────
         $kpis = [
             'total_delitos'       => Delito::count(),
-            'total_comunas'       => Comuna::count(),
             'total_estaciones'    => EstacionPolicia::count(),
             'total_usuarios'      => Usuario::count(),
-            'comunas_alto_riesgo' => Comuna::where('id_nivel_riesgo', 3)->count(),
-            'delitos_mes'         => Delito::whereMonth('fecha', now()->month)
-                                           ->whereYear('fecha', now()->year)
-                                           ->count(),
+            'delitos_mes_actual'  => DB::table('delito_ubicacion')
+                                         ->whereMonth('fecha', Carbon::now()->month)
+                                         ->whereYear('fecha', Carbon::now()->year)->count(),
+            'delitos_mes_anterior' => DB::table('delito_ubicacion')
+                                         ->whereMonth('fecha', Carbon::now()->subMonth()->month)
+                                         ->whereYear('fecha', Carbon::now()->subMonth()->year)->count(),
+            'promedio_delitos_mes' => round(DB::table('delito_ubicacion')->count() / 12, 1), // Aproximado
         ];
 
         // ──────────────────────────────────────────────
-        // Gráfico 1: Delitos por comuna (Bar)
+        // Gráfico 1: Delitos por Zona (Bar)
         // ──────────────────────────────────────────────
-        $delitosPorComuna = DB::table('delitos')
-            ->join('comunas', 'delitos.id_comuna', '=', 'comunas.id_comuna')
-            ->select('comunas.nombre', DB::raw('COUNT(*) as total'))
-            ->groupBy('comunas.id_comuna', 'comunas.nombre', 'comunas.numero')
-            ->orderBy('comunas.numero')
+        $delitosPorZona = DB::table('delito_ubicacion as du')
+            ->join('ubicaciones as u', 'du.id_ubicacion', '=', 'u.id_ubicacion')
+            ->join('subzonas as s', 'u.id_subzona', '=', 's.id_subzona')
+            ->join('zonas as z', 's.id_zona', '=', 'z.id_zona')
+            ->select('z.zona as nombre', DB::raw('COUNT(*) as total'))
+            ->groupBy('z.id_zona', 'z.zona')
+            ->orderByDesc('total')
             ->get();
 
         // ──────────────────────────────────────────────
@@ -57,45 +60,41 @@ class DashboardController extends Controller
         // ──────────────────────────────────────────────
         // Gráfico 3: Delitos por mes (Line - últimos 12 meses)
         // ──────────────────────────────────────────────
-        $delitosPorMes = collect();
-        for ($i = 11; $i >= 0; $i--) {
-            $fecha = Carbon::now()->subMonths($i);
-            $total = Delito::whereYear('fecha', $fecha->year)
-                           ->whereMonth('fecha', $fecha->month)
-                           ->count();
-            $delitosPorMes->push([
-                'mes'   => $fecha->locale('es')->isoFormat('MMM YY'),
-                'total' => $total,
-            ]);
-        }
+        $delitosPorMes = DB::table('delito_ubicacion')
+            ->select(
+                DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->where('fecha', '>=', Carbon::now()->subMonths(12)->startOfMonth())
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'mes' => Carbon::createFromFormat('Y-m', $item->mes)->format('M Y'),
+                    'total' => $item->total
+                ];
+            });
 
         // ──────────────────────────────────────────────
         // Gráfico 4: Distribución de niveles de riesgo (Pie)
         // ──────────────────────────────────────────────
-        $distribucionNiveles = DB::table('comunas')
-            ->leftJoin('nivel_riesgos', 'comunas.id_nivel_riesgo', '=', 'nivel_riesgos.id_nivel_riesgo')
-            ->select(
-                DB::raw("COALESCE(nivel_riesgos.nivel, 'Sin clasificar') as nivel"),
-                DB::raw("COALESCE(nivel_riesgos.color, '#94a3b8') as color"),
-                DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('nivel_riesgos.nivel', 'nivel_riesgos.color')
+        $nivelesRiesgo = DB::table('ubicaciones as u')
+            ->join('nivel_riesgos as n', 'u.id_nivel', '=', 'n.id_nivel_riesgo')
+            ->select('n.nivel', 'n.color', DB::raw('COUNT(*) as total'))
+            ->groupBy('n.id_nivel_riesgo', 'n.nivel', 'n.color')
+            ->orderByDesc('total')
             ->get();
 
         // ──────────────────────────────────────────────
-        // Tabla: Top 5 comunas con más delitos
+        // Tabla: Top 5 zonas con más delitos
         // ──────────────────────────────────────────────
-        $topComunas = DB::table('delitos')
-            ->join('comunas', 'delitos.id_comuna', '=', 'comunas.id_comuna')
-            ->leftJoin('nivel_riesgos', 'comunas.id_nivel_riesgo', '=', 'nivel_riesgos.id_nivel_riesgo')
-            ->select(
-                'comunas.nombre',
-                'comunas.numero',
-                'nivel_riesgos.nivel as nivel_riesgo',
-                'nivel_riesgos.color as color',
-                DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('comunas.id_comuna', 'comunas.nombre', 'comunas.numero', 'nivel_riesgos.nivel', 'nivel_riesgos.color')
+        $topZonas = DB::table('delito_ubicacion as du')
+            ->join('ubicaciones as u', 'du.id_ubicacion', '=', 'u.id_ubicacion')
+            ->join('subzonas as s', 'u.id_subzona', '=', 's.id_subzona')
+            ->join('zonas as z', 's.id_zona', '=', 'z.id_zona')
+            ->select('z.zona', DB::raw('COUNT(*) as total'))
+            ->groupBy('z.id_zona', 'z.zona')
             ->orderByDesc('total')
             ->limit(5)
             ->get();
@@ -116,14 +115,35 @@ class DashboardController extends Controller
                 ];
             });
 
+        // ──────────────────────────────────────────────
+        // Gráfico 6: Delitos por día de la semana
+        // ──────────────────────────────────────────────
+        $delitosPorDia = DB::table('delito_ubicacion')
+            ->select(
+                DB::raw('DAYOFWEEK(fecha) as dia_num'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->where('fecha', '>=', Carbon::now()->subMonths(6))
+            ->groupBy('dia_num')
+            ->orderBy('dia_num')
+            ->get()
+            ->map(function ($item) {
+                $dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                return [
+                    'dia' => $dias[$item->dia_num - 1] ?? 'Desconocido',
+                    'total' => $item->total
+                ];
+            });
+
         return view('dashboard.index', [
             'kpis'               => $kpis,
-            'delitosPorComuna'   => $delitosPorComuna,
+            'delitosPorZona'     => $delitosPorZona,
             'delitosPorTipo'     => $delitosPorTipo,
             'delitosPorMes'      => $delitosPorMes,
-            'distribucionNiveles'=> $distribucionNiveles,
-            'topComunas'         => $topComunas,
+            'nivelesRiesgo'      => $nivelesRiesgo,
+            'topZonas'           => $topZonas,
             'porGravedad'        => $porGravedad,
+            'delitosPorDia'      => $delitosPorDia,
         ]);
     }
 }

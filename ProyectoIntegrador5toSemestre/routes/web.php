@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DelitoController;
+use App\Http\Controllers\EstacionPoliciaController;
 use App\Http\Controllers\NivelRiesgoController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\PuntoCardinalController;
@@ -36,21 +38,26 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/visitante', function () {
-    // Comunas del Distrito de Aguablanca: 13, 14, 15, 21
-    $aguablancaComunas = [13, 14, 15, 21];
-
     $stats = [
-        'homicidios'  => \App\Models\Delito::where('tipo', 'Homicidio')->count(),
-        'comunas'     => \App\Models\Comuna::count(),
-        'aguablanca'  => \App\Models\Delito::whereIn('id_comuna',
-                            \App\Models\Comuna::whereIn('numero', $aguablancaComunas)->pluck('id_comuna')
-                        )->count(),
-        'estaciones'  => \App\Models\EstacionPolicia::count(),
+        'total_delitos'     => \App\Models\Delito::count(),
+        'homicidios'        => \App\Models\Delito::where('tipo', 'Homicidio')->count(),
+        'hurto_personas'    => \App\Models\Delito::where('tipo', 'Hurto a personas')->count(),
+        'hurto_vehiculos'   => \App\Models\Delito::where('tipo', 'Hurto a vehículos')->count(),
+        'hurto_residencias' => \App\Models\Delito::where('tipo', 'Hurto a residencias')->count(),
+        'estaciones'        => \App\Models\EstacionPolicia::count(),
+        'zonas_cubiertas'   => \App\Models\Zonas::count(),
+        'delitos_mes'       => \DB::table('delito_ubicacion')
+                                   ->whereMonth('fecha', now()->month)
+                                   ->whereYear('fecha', now()->year)->count(),
+        'delitos_semana'    => \DB::table('delito_ubicacion')
+                                   ->whereBetween('fecha', [
+                                       now()->startOfWeek(), now()->endOfWeek()
+                                   ])->count(),
     ];
 
     // Ubicaciones con sus relaciones para el mapa de calor
     // Solo las que tienen coordenadas (lat/lng definidas)
-    $ubicaciones = \App\Models\Ubicacion::with(['nivel', 'zona', 'puntoCardinal'])
+    $ubicaciones = \App\Models\Ubicacion::with(['nivel', 'subzona', 'puntoCardinal'])
         ->whereNotNull('latitud')
         ->whereNotNull('longitud')
         ->get()
@@ -66,12 +73,12 @@ Route::get('/visitante', function () {
             return [
                 'id'             => $u->id_ubicacion,
                 'direccion'      => $u->direccion,
-                'barrio'         => $barrio ?: ($u->zona->zona ?? 'Sin barrio'),
+                'barrio'         => $barrio ?: ($u->subzona->subzona ?? 'Sin barrio'),
                 'lat'            => (float) $u->latitud,
                 'lng'            => (float) $u->longitud,
                 'nivel_nombre'   => $u->nivel->nivel ?? 'Sin nivel',
                 'nivel_color'    => $u->nivel->color ?? '#94a3b8',
-                'zona_nombre'    => $u->zona->zona ?? '—',
+                'zona_nombre'    => $u->subzona->subzona ?? '—',
                 'punto_cardinal' => $u->puntoCardinal->nombre ?? '—',
             ];
         });
@@ -104,7 +111,7 @@ Route::get('/visitante', function () {
     };
 
     // Barrios con riesgo BAJO (extraídos de dirección)
-    $barriosSeguros = \App\Models\Ubicacion::where('id_nivel', 1)
+    $barriosSeguros = \App\Models\Ubicacion::where('id_nivel', 3)
         ->get()
         ->map(fn ($u) => $extraerBarrio($u->direccion))
         ->filter()
@@ -114,7 +121,7 @@ Route::get('/visitante', function () {
         ->toArray();
 
     // Barrios con riesgo ALTO (extraídos de dirección)
-    $altoRiesgo = \App\Models\Ubicacion::where('id_nivel', 3)
+    $altoRiesgo = \App\Models\Ubicacion::where('id_nivel', 1)
         ->get()
         ->map(fn ($u) => $extraerBarrio($u->direccion))
         ->filter()
@@ -123,41 +130,33 @@ Route::get('/visitante', function () {
         ->take(8)
         ->toArray();
 
-    // Aguablanca: top delitos en comunas 13, 14, 15, 21
-    $aguablancaIds = \App\Models\Comuna::whereIn('numero', [13, 14, 15, 21])->pluck('id_comuna');
-    $aguablancaTop = \App\Models\Delito::whereIn('id_comuna', $aguablancaIds)
-        ->selectRaw('tipo, COUNT(*) as total')
-        ->groupBy('tipo')
-        ->orderByDesc('total')
-        ->limit(4)
-        ->get()
-        ->toArray();
-    $aguablancaTotal = \App\Models\Delito::whereIn('id_comuna', $aguablancaIds)->count();
-
-    // Siloé = Comuna 20
-    $siloeComuna = \App\Models\Comuna::where('numero', 20)->first();
-    $siloeTotal  = $siloeComuna ? \App\Models\Delito::where('id_comuna', $siloeComuna->id_comuna)->count() : 0;
-    $siloeTop = $siloeComuna ? \App\Models\Delito::where('id_comuna', $siloeComuna->id_comuna)
-        ->selectRaw('tipo, COUNT(*) as total')
-        ->groupBy('tipo')
-        ->orderByDesc('total')
-        ->limit(3)
-        ->get()
-        ->toArray() : [];
-
     // Lugares para denunciar = primeras 5 estaciones
     $denunciar = \App\Models\EstacionPolicia::limit(5)->get()->map(function ($e) {
         return ['nombre' => $e->nombre, 'direccion' => $e->direccion, 'telefono' => $e->telefono];
     })->toArray();
 
+    $topDelitos = \App\Models\Delito::select('tipo', \Illuminate\Support\Facades\DB::raw('COUNT(*) as total'))
+        ->groupBy('tipo')
+        ->orderByDesc('total')
+        ->limit(5)
+        ->get()
+        ->map(fn ($d) => ['tipo' => $d->tipo, 'total' => $d->total]);
+
+    $medioRiesgo = \App\Models\Ubicacion::where('id_nivel', 2)
+        ->get()
+        ->map(fn ($u) => $extraerBarrio($u->direccion))
+        ->filter()
+        ->unique()
+        ->values()
+        ->take(8)
+        ->toArray();
+
     $chatData = [
-        'barrios_seguros'  => $barriosSeguros,
-        'alto_riesgo'      => $altoRiesgo,
-        'aguablanca_total' => $aguablancaTotal,
-        'aguablanca_top'   => $aguablancaTop,
-        'siloe_total'      => $siloeTotal,
-        'siloe_top'        => $siloeTop,
-        'denunciar'        => $denunciar,
+        'barrios_seguros' => $barriosSeguros,
+        'medio_riesgo'    => $medioRiesgo,
+        'alto_riesgo'     => $altoRiesgo,
+        'top_delitos'     => $topDelitos,
+        'denunciar'       => $denunciar,
     ];
 
     return view('visitante', compact('stats', 'ubicaciones', 'estacionesPolicia', 'chatData'));
@@ -224,26 +223,20 @@ Route::middleware('auth.session')->group(function () {
     Route::get('/plantilla', [DashboardController::class, 'index'])->name('plantilla');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Niveles de Riesgo - Moderador (RF18-21)
-    Route::middleware('role:moderador,admin')->group(function () {
+    // Niveles de Riesgo y estadísticas - Analista y Administrador
+    Route::middleware('role:analista,admin')->group(function () {
         Route::resource('/nivel', NivelRiesgoController::class);
+        Route::resource('/cardinal', PuntoCardinalController::class);
+        Route::resource('/zonas_tipo', ZonasTipoController::class);
+        Route::resource('/zonas', ZonasController::class)->parameters(['zonas' => 'zonas']);
+        Route::resource('/subzonas_tipo', SubzonasTipoController::class);
+        Route::resource('/subzonas', SubzonasController::class)->parameters(['subzonas' => 'subzonas']);
+        Route::resource('/ubicacion', UbicacionController::class);
+        Route::resource('/delitos', DelitoController::class)->parameters(['delitos' => 'delito']);
+        Route::resource('/estaciones', EstacionPoliciaController::class)->parameters(['estaciones' => 'estacion']);
     });
 
-    // Puntos cardinales - cualquier rol interno
-    Route::resource('/cardinal', PuntoCardinalController::class);
-
-    // CRUD de Zonas / Subzonas (entidades de tu compañero)
-    // ->parameters() fuerza el nombre del parámetro de URL para que coincida
-    // con el nombre del argumento del controller ($zonas, $subzonas).
-    Route::resource('/zonas_tipo', ZonasTipoController::class);
-    Route::resource('/zonas', ZonasController::class)->parameters(['zonas' => 'zonas']);
-    Route::resource('/subzonas_tipo', SubzonasTipoController::class);
-    Route::resource('/subzonas', SubzonasController::class)->parameters(['subzonas' => 'subzonas']);
-
-    // CRUD de Ubicaciones (entidad central del MER)
-    Route::resource('/ubicacion', UbicacionController::class);
-
-    // Bandeja de comentarios - moderador y admin (RF11, RF13)
+    // Bandeja de comentarios - Moderador y Administrador (RF11, RF13)
     Route::middleware('role:moderador,admin')->group(function () {
         Route::get('/comentario', [ComentarioController::class, 'index'])->name('comentario.index');
         Route::patch('/comentario/{comentario}/aprobar',  [ComentarioController::class, 'aprobar'])->name('comentario.aprobar');
@@ -369,17 +362,17 @@ Route::middleware('auth.session')->group(function () {
     });
 
     Route::get('/export/ubicacion', function () {
-        $ubicaciones = Ubicacion::with(['nivel', 'puntoCardinal', 'zona'])->get()->map(function ($u) {
+        $ubicaciones = Ubicacion::with(['nivel', 'puntoCardinal', 'subzona'])->get()->map(function ($u) {
             $u->nivel_nombre   = $u->nivel->nivel ?? 'Sin nivel';
             $u->punto_nombre   = $u->puntoCardinal->nombre ?? 'Sin punto';
-            $u->zona_nombre    = $u->zona->zona ?? 'Sin zona';
+            $u->zona_nombre    = $u->subzona->subzona ?? 'Sin subzona';
             return $u;
         });
 
         return app(PdfController::class)->export(
             Ubicacion::class,
             'Ubicaciones',
-            ['ID', 'Dirección', 'Nivel', 'Punto Cardinal', 'Zona'],
+            ['ID', 'Dirección', 'Nivel', 'Punto Cardinal', 'Subzona'],
             ['id_ubicacion', 'direccion', 'nivel_nombre', 'punto_nombre', 'zona_nombre'],
             'ubicaciones.pdf',
             $ubicaciones

@@ -42,6 +42,9 @@
                 <span>Dashboard</span>
             </a>
 
+            @php $rolId = (int) session('logged_user_rol'); @endphp
+
+            @if(in_array($rolId, [1, 3]))
             <a href="{{ route('nivel.index') }}" class="element-slidebar-btn {{ request()->routeIs('nivel.*') ? 'active' : '' }}">
                 <img src="{{asset('img/Alarma.png')}}" alt="NivelRiesgo">
                 <span>Niveles de riesgo</span>
@@ -50,6 +53,9 @@
                 <img src="{{asset('img/puntosCardinales.png')}}" alt="PuntoCardinal">
                 <span>Puntos Cardinales</span>
             </a>
+            @endif
+
+            @if($rolId === 1)
             <a href="{{ route('rol.index') }}" class="element-slidebar-btn {{ request()->routeIs('rol.*') ? 'active' : '' }}">
                 <img src="{{asset('img/Roles.png')}}" alt="Roles">
                 <span>Roles</span>
@@ -58,7 +64,9 @@
                 <img src="{{asset('img/Usuarios.png')}}" alt="Usuarios">
                 <span>Usuarios</span>
             </a>
+            @endif
 
+            @if(in_array($rolId, [1, 3]))
             <button type="button" class="accordion-btn" id="zonas-accordion-btn">
                 <div class="accordion-header">
                     <img src="{{asset('img/Zonas.png')}}" alt="Config Zonas">
@@ -90,6 +98,17 @@
                 <img src="{{asset('img/puntosCardinales.png')}}" alt="Ubicaciones">
                 <span>Ubicaciones</span>
             </a>
+
+            {{-- Delitos y Estaciones de Policía --}}
+            <a href="{{ route('delitos.index') }}" class="element-slidebar-btn {{ request()->routeIs('delitos.*') ? 'active' : '' }}">
+                <img src="{{asset('img/Delitos.png')}}" alt="Delitos">
+                <span>Delitos</span>
+            </a>
+            <a href="{{ route('estaciones.index') }}" class="element-slidebar-btn {{ request()->routeIs('estaciones.*') ? 'active' : '' }}">
+                <img src="{{asset('img/EstaciónPolicia.png')}}" alt="Estaciones de Policía">
+                <span>Estaciones de Policía</span>
+            </a>
+            @endif
 
             {{-- Comentarios (RF11, RF13) - moderador --}}
             @if(in_array((int) session('logged_user_rol'), [1, 2]))

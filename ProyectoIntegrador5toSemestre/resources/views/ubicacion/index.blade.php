@@ -32,12 +32,12 @@ Ubicaciones
                 @endforeach
             </select>
 
-            {{-- Filtro por zona --}}
-            <select name="zona" class="filtro-select">
-                <option value="">Todas las zonas</option>
-                @foreach ($zonas as $z)
-                    <option value="{{ $z->id_zona }}" {{ request('zona') == $z->id_zona ? 'selected' : '' }}>
-                        {{ $z->zona }}
+            {{-- Filtro por subzona --}}
+            <select name="subzona" class="filtro-select">
+                <option value="">Todas las Subzonas</option>
+                @foreach ($subzonas as $s)
+                    <option value="{{ $s->id_subzona }}" {{ request('subzona') == $s->id_subzona ? 'selected' : '' }}>
+                        {{ $s->subzona }}
                     </option>
                 @endforeach
             </select>
@@ -84,7 +84,7 @@ Ubicaciones
                         @endif
                     </td>
                     <td>{{ $ubicacion->puntoCardinal->nombre ?? '—' }}</td>
-                    <td>{{ $ubicacion->zona->zona ?? '—' }}</td>
+                    <td>{{ $ubicacion->subzona->subzona ?? '—' }}</td>
                     <td>
                         <div class="opciones-cell">
                             <a href="{{ route('ubicacion.edit', $ubicacion) }}" title="Editar">
