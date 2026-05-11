@@ -42,10 +42,12 @@ Dashboard — Análisis de Seguridad
     .chart-canvas-wrap { position: relative; height: 320px; }
 
     /* Top comunas table */
-    .top-table { width: 100%; border-collapse: collapse; }
-    .top-table th { text-align: left; color: #94a3b8; font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; padding: 10px 12px; border-bottom: 1px solid rgba(56,114,191,0.22); }
-    .top-table td { padding: 12px; border-bottom: 1px solid rgba(56,114,191,0.1); color: #e2e8f0; }
+    .top-table { width: 100%; border-collapse: collapse; background: rgba(11,23,40,0.96); border-radius: 8px; overflow: hidden; }
+    .top-table th { text-align: left; color: #94a3b8; font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; padding: 12px 16px; border-bottom: 1px solid rgba(56,114,191,0.22); background: rgba(7,18,35,0.96); font-weight: 600; }
+    .top-table td { padding: 12px 16px; border-bottom: 1px solid rgba(56,114,191,0.1); color: #e2e8f0; }
+    .top-table td strong { color: #ef4444; font-size: 1.1em; }
     .top-table tr:last-child td { border-bottom: none; }
+    .top-table tr:hover { background: rgba(56,114,191,0.05); }
     .badge-nivel { display:inline-block; padding: 3px 10px; border-radius: 999px; font-size: .72rem; font-weight: 700; color: #07141f; }
 
     @media (max-width: 1100px) {
@@ -64,28 +66,10 @@ Dashboard — Análisis de Seguridad
             <div class="kpi-value">{{ number_format($kpis['total_delitos']) }}</div>
         </div>
 
-        <div class="kpi-card" style="--kpi-color:#f97316;">
-            <div class="kpi-icon">📅</div>
-            <div class="kpi-label">Delitos este mes</div>
-            <div class="kpi-value">{{ number_format($kpis['delitos_mes']) }}</div>
-        </div>
-
-        <div class="kpi-card" style="--kpi-color:#dc2626;">
-            <div class="kpi-icon">🔴</div>
-            <div class="kpi-label">Comunas riesgo alto</div>
-            <div class="kpi-value">{{ $kpis['comunas_alto_riesgo'] }} / {{ $kpis['total_comunas'] }}</div>
-        </div>
-
         <div class="kpi-card" style="--kpi-color:#3b82f6;">
             <div class="kpi-icon">👮</div>
             <div class="kpi-label">Estaciones de Policía</div>
             <div class="kpi-value">{{ $kpis['total_estaciones'] }}</div>
-        </div>
-
-        <div class="kpi-card" style="--kpi-color:#22c55e;">
-            <div class="kpi-icon">🗺️</div>
-            <div class="kpi-label">Comunas mapeadas</div>
-            <div class="kpi-value">{{ $kpis['total_comunas'] }}</div>
         </div>
 
         <div class="kpi-card" style="--kpi-color:#a855f7;">
@@ -94,14 +78,26 @@ Dashboard — Análisis de Seguridad
             <div class="kpi-value">{{ $kpis['total_usuarios'] }}</div>
         </div>
 
+        <div class="kpi-card" style="--kpi-color:#10b981;">
+            <div class="kpi-icon">📅</div>
+            <div class="kpi-label">Delitos este mes</div>
+            <div class="kpi-value">{{ $kpis['delitos_mes_actual'] }}</div>
+        </div>
+
+        <div class="kpi-card" style="--kpi-color:#f59e0b;">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-label">Promedio mensual</div>
+            <div class="kpi-value">{{ $kpis['promedio_delitos_mes'] }}</div>
+        </div>
+
     </div>
 
-    {{-- ════════════ Fila 1: Bar Comunas + Pie Niveles ════════════ --}}
+    {{-- ════════════ Fila 1: Bar Zonas + Pie Niveles ════════════ --}}
     <div class="charts-grid">
         <div class="chart-card">
-            <h3>📊 Delitos por comuna</h3>
+            <h3>📊 Delitos por zona</h3>
             <div class="chart-canvas-wrap">
-                <canvas id="chartComunas"></canvas>
+                <canvas id="chartZonas"></canvas>
             </div>
         </div>
 
@@ -121,9 +117,8 @@ Dashboard — Análisis de Seguridad
         </div>
     </div>
 
-    {{-- ════════════ Fila 3: Pie Tipos + Bar Gravedad + Top 5 ════════════ --}}
-    <div class="charts-grid-3">
-
+    {{-- ════════════ Fila 3: Pie Tipos + Bar Gravedad ════════════ --}}
+    <div class="charts-grid">
         <div class="chart-card">
             <h3>🔍 Tipos de delito</h3>
             <div class="chart-canvas-wrap">
@@ -137,54 +132,59 @@ Dashboard — Análisis de Seguridad
                 <canvas id="chartGravedad"></canvas>
             </div>
         </div>
+    </div>
 
+    {{-- ════════════ Fila 4: Bar Día semana + Top 5 Zonas ════════════ --}}
+    <div class="charts-grid">
         <div class="chart-card">
-            <h3>🏆 Top 5 comunas con más delitos</h3>
-            <table class="top-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Comuna</th>
-                        <th>Riesgo</th>
-                        <th style="text-align:right;">Casos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($topComunas as $i => $c)
-                    <tr>
-                        <td>{{ $i + 1 }}</td>
-                        <td>{{ $c->nombre }}</td>
-                        <td>
-                            <span class="badge-nivel" style="background: {{ $c->color ?? '#94a3b8' }};">
-                                {{ $c->nivel_riesgo ?? 'N/A' }}
-                            </span>
-                        </td>
-                        <td style="text-align:right; font-weight: 700;">{{ $c->total }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <h3>📅 Delitos por día de la semana</h3>
+            <div class="chart-canvas-wrap">
+                <canvas id="chartDias"></canvas>
+            </div>
         </div>
 
+        <div class="chart-card">
+            <h3>🏆 Top 5 zonas con más delitos</h3>
+            <div class="chart-canvas-wrap">
+                <table class="top-table">
+                    <thead>
+                        <tr>
+                            <th>Zona</th>
+                            <th>Delitos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($topZonas as $zona)
+                        <tr>
+                            <td>{{ $zona->zona }}</td>
+                            <td><strong>{{ $zona->total }}</strong></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
 
 <script>
 // ════════════ Datos del backend ════════════
-const dataComunas = @json($delitosPorComuna);
+const dataComunas = @json($delitosPorZona);
 const dataTipos = @json($delitosPorTipo);
 const dataMeses = @json($delitosPorMes);
-const dataNiveles = @json($distribucionNiveles);
+const dataNiveles = @json($nivelesRiesgo);
+const topZonas = @json($topZonas);
 const dataGravedad = @json($porGravedad);
+const dataDias = @json($delitosPorDia);
 
 // Chart.js global config
 Chart.defaults.color = '#94a3b8';
 Chart.defaults.font.family = 'Roboto, sans-serif';
 Chart.defaults.borderColor = 'rgba(56,114,191,0.16)';
 
-// ════════════ 1. Delitos por comuna (Bar) ════════════
-new Chart(document.getElementById('chartComunas'), {
+// ════════════ 1. Delitos por zona (Bar) ════════════
+new Chart(document.getElementById('chartZonas'), {
     type: 'bar',
     data: {
         labels: dataComunas.map(c => c.nombre),
@@ -259,14 +259,16 @@ new Chart(document.getElementById('chartTendencia'), {
 });
 
 // ════════════ 4. Tipos de delito (Pie) ════════════
-const palette = ['#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#14b8a6','#06b6d4','#3b82f6','#a855f7','#ec4899'];
 new Chart(document.getElementById('chartTipos'), {
     type: 'pie',
     data: {
         labels: dataTipos.map(t => t.tipo),
         datasets: [{
             data: dataTipos.map(t => t.total),
-            backgroundColor: dataTipos.map((_, i) => palette[i % palette.length]),
+            backgroundColor: [
+                '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4',
+                '#3b82f6', '#8b5cf6', '#ec4899', '#64748b', '#374151'
+            ],
             borderWidth: 2,
             borderColor: '#0b1725',
         }]
@@ -275,7 +277,7 @@ new Chart(document.getElementById('chartTipos'), {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { position: 'bottom', labels: { padding: 8, font: { size: 10 } } }
+            legend: { position: 'bottom', labels: { padding: 8, boxWidth: 12 } }
         }
     }
 });
@@ -286,10 +288,16 @@ new Chart(document.getElementById('chartGravedad'), {
     data: {
         labels: dataGravedad.map(g => g.label),
         datasets: [{
-            label: 'Casos',
+            label: 'Delitos',
             data: dataGravedad.map(g => g.total),
-            backgroundColor: ['#22c55e','#f97316','#ef4444'],
-            borderRadius: 8,
+            backgroundColor: [
+                'rgba(34, 197, 94, 0.7)',   // Verde - Leve
+                'rgba(245, 158, 11, 0.7)',  // Amarillo - Medio
+                'rgba(239, 68, 68, 0.7)'    // Rojo - Grave
+            ],
+            borderColor: ['#22c55e', '#f59e0b', '#ef4444'],
+            borderWidth: 1,
+            borderRadius: 4,
         }]
     },
     options: {
@@ -300,6 +308,54 @@ new Chart(document.getElementById('chartGravedad'), {
         scales: {
             x: { beginAtZero: true, grid: { color: 'rgba(56,114,191,0.1)' } },
             y: { grid: { display: false } }
+        }
+    }
+});
+
+// ════════════ 6. Delitos por día de la semana (Bar) ════════════
+new Chart(document.getElementById('chartDias'), {
+    type: 'bar',
+    data: {
+        labels: dataDias.map(d => d.dia),
+        datasets: [{
+            label: 'Delitos',
+            data: dataDias.map(d => d.total),
+            backgroundColor: 'rgba(168, 85, 247, 0.7)',
+            borderColor: '#a855f7',
+            borderWidth: 1,
+            borderRadius: 6,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(56,114,191,0.1)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+new Chart(document.getElementById('chartZonas'), {
+    type: 'bar',
+    data: {
+        labels: dataComunas.map(c => c.nombre),
+        datasets: [{
+            label: 'Delitos',
+            data: dataComunas.map(c => c.total),
+            backgroundColor: 'rgba(56, 189, 248, 0.7)',
+            borderColor: '#38bdf8',
+            borderWidth: 1,
+            borderRadius: 6,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(56,114,191,0.1)' } },
+            x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 45 } }
         }
     }
 });

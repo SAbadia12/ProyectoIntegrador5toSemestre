@@ -18,7 +18,7 @@ class EstacionPolicia extends Model
         'telefono',
         'latitud',
         'longitud',
-        'id_comuna',
+        'id_subzona',
     ];
 
     protected $casts = [
@@ -26,8 +26,8 @@ class EstacionPolicia extends Model
         'longitud' => 'float',
     ];
 
-    public function comuna()
+    public function subzona()
     {
-        return $this->belongsTo(Comuna::class, 'id_comuna', 'id_comuna');
+        return $this->belongsTo(Subzonas::class, 'id_subzona', 'id_subzona');
     }
 }

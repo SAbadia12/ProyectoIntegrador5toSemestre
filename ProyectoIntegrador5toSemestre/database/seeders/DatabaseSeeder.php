@@ -35,7 +35,6 @@ class DatabaseSeeder extends Seeder
             UbicacionSeeder::class,
 
             // ── Legado (compatibilidad con dashboard) ───────
-            ComunaSeeder::class,
             EstacionPoliciaSeeder::class,
 
             // ── Usuarios y delitos ──────────────────────────

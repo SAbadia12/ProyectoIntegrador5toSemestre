@@ -74,7 +74,7 @@ class UbicacionSeeder extends Seeder
                     'longitud'          => $lng,
                     'id_nivel'          => $idNivel,
                     'id_punto_cardinal' => $idPunto,
-                    'id_zona'           => $zona->id_zona,
+                    'id_subzona'           => $zona->id_subzona,
                 ]
             );
         }

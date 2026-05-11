@@ -60,12 +60,12 @@
             </div>
 
             <div class="form-group">
-                <label for="id_zona">Zona</label>
-                <select id="id_zona" name="id_zona" required class="form-control">
-                    <option value="">Seleccione una zona</option>
-                    @foreach($zonas as $z)
-                        <option value="{{ $z->id_zona }}" {{ old('id_zona') == $z->id_zona ? 'selected' : '' }}>
-                            {{ $z->zona }}
+                <label for="id_subzona">Subzona</label>
+                <select id="id_subzona" name="id_subzona" required class="form-control">
+                    <option value="">Seleccione una subzona</option>
+                    @foreach($subzonas as $s)
+                        <option value="{{ $s->id_subzona }}" {{ old('id_subzona') == $s->id_subzona ? 'selected' : '' }}>
+                            {{ $s->subzona }}
                         </option>
                     @endforeach
                 </select>

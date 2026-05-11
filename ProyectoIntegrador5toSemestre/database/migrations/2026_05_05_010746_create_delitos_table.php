@@ -7,36 +7,24 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Tabla 'incidentes' - registros de delitos reportados.
+     * Tabla 'delitos' - registros de tipos de delitos reportados.
      * Base para el Dashboard del Analista (RF10).
-     *
-     * Tipos de delito (campo 'tipo') manejados como string para simplicidad:
-     *   - Hurto a personas
-     *   - Hurto a residencias
-     *   - Hurto a comercio
-     *   - Hurto de vehículos
-     *   - Hurto de motos
-     *   - Homicidio
-     *   - Lesiones personales
-     *   - Violencia intrafamiliar
-     *   - Extorsión
-     *   - Secuestro
      *
      * Gravedad: 1 (leve) a 3 (grave)
      */
     public function up(): void
     {
-        Schema::create('incidentes', function (Blueprint $table) {
-            $table->id('id_incidente');
+        Schema::create('delitos', function (Blueprint $table) {
+            $table->id('id_delito');
             $table->string('tipo');
-            $table->unsignedBigInteger('id_comuna');
+            $table->unsignedBigInteger('id_ubicacion');
             $table->date('fecha');
             $table->tinyInteger('gravedad')->default(1);   // 1=leve, 2=medio, 3=grave
             $table->text('descripcion')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_comuna')
-                ->references('id_comuna')->on('comunas')
+            $table->foreign('id_ubicacion')
+                ->references('id_ubicacion')->on('ubicaciones')
                 ->cascadeOnDelete();
 
             $table->index('tipo');
@@ -46,6 +34,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('incidentes');
+        Schema::dropIfExists('delitos');
     }
 };
